@@ -1,48 +1,89 @@
-# Bidirectional Preview
+# BiOOP
 
-This is a direct manipulating programming system for incomplete programs.
+This is a direct manipulation programming system for object oriented programs.
 
 ## Tool Instructions
-### Initial Incomplete Programs
-1. In the editor on the left, write a program based on the syntax mentioned in the paper
+### Syntax
+1. Class Declarations
+   ```
+   Class JFrame Extends Container {
+       title:Ref<String>, 
+       members:Ref<List<JComponent>>;
 
-   - Hole: `_` (underscore)
-   - Lambda Expression: `\x=>x+1`
-   - Function Call: `(\x=>x) 3`
-   - List Construction: `1::2::[]` (or, `[1,2]`)
-   - Tuple: `(1,2)`
-   - Let-Binding: `let a = 1 in a`
-   - Letrec-Binding: `letrec f = ... in ...`
-   - If Conditional: `If x==y then ... else ...`
-   - Case Expression: `case x==y of true=>...|false=>...|...`
-2. Click "Eval" Button to see the output
+       setMembers(members){
+           this.members:=members
+       };
+       setTitle(title){
+           this.title:=title ++ ">"
+       };
+    }
+    ```
+2. Data Structures
+- String: "abc"
+- Tuple: `(1,2)`
+- List: `[1,2,...,n]` (or, `1::2::[]`)
 
-### Direct Manipulate on Output/Context
-1. Modify the text in the **Output** window
-2. Modify the values in the **Context** window
+3. Arithmetic Expressions
+- Binary Operator: `* / // + - ++ < > <= >= == && ||`
+- Unary Operator: `- ~`
 
-    - Click hole values to jump to its closure
-3. Click **Uneval and Preview** Button
-    - To see the preview of the code changes
-    - Click **Revert Code** to revert to the original code
-4. Click **Uneval and Update** Button
-    - Make sure the updated code and cannot retract
+4. Sequence `s1;s2`
+5. Conditions
+- If Statement: `If t1 then t2 else t3`
+- Case Statement:
+```
+case ls of
+   [] => []
+   | x :: xs => xs
+```
+6. References
+- Reference Creations: ref 3
+- Dereferences: !r
+- Assignments: t1:=t2
+7. Statements `var = term ;;`
+8. Objects
+- Field Access: `t.f`
+- Method Invocation: `(object->method) args`
+- Object Creations: `new Class([args])`
 
-### Others
-**Clear Hole-Bindings** Button: To clear the bindings of holes in the programs
+### Example
+```
+Class JComponent Extends Object {}
 
-## Code Structure
-- **ace** the source code of [ace editor](https://ace.c9.io/)
-- **elm.json** configuration file
-- **examples** some example source programs
-- **index.html** tool entrance
-- **src** main code
-  - *Native* interact with Javascript
-- **style** css of web page
+Class JMenuItem Extends JComponent {
+    title:Ref<String>;
+
+    setTitle(title){
+        this.title:=title++"!!!"
+    };
+}
+
+Class JMenu Extends JMenuItem {
+    id:String, 
+    items:List<JMenuItem>;
+}
+
+item1 = new JMenuItem([ref "Item1"]);;
+item2 = new JMenuItem([ref "Item2"]);;
+menu = new JMenu([ref "Menu", "menu-id", [item1, item2]]);;
+
+main =
+    (item1->setTitle) "Menu-Item";
+    (menu->setTitle) "Test Menu";
+    menu;;
+```
+
+
+### Direct Manipulations on Output (#TODO)
+1. Value Manipulations: Directly manipulating the text in the Output window or using the Develop Tool of the browser.
+2. Stucture Manipulations:
+   - Modify Types
+   - Adding Objects
+   - Deleting Objects
 
 ## Usage
 - git clone
-- click index.html
+- click oop-index.html
 
 ## Develop
-- elm make src/Main.elm --output=elm.js
+- elm make src/OOP/Main.elm --output=oop-elm.js

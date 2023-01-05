@@ -1,0 +1,27 @@
+<!DOCTYPE HTML>
+<html>
+
+    <head>
+        <meta charset="UTF-8">
+        <title>Bidirectional Preview</title>
+        <link rel="stylesheet" href="./style/main.css" />
+        <script type="text/javascript" src="elm.js"></script>
+    </head>
+
+    <body>
+        <div id="myapp"></div>
+    </body>
+
+    <script type="text/javascript">
+        st = document.body.style;
+        st.margin = 0;
+        st.height = "968px";
+        var app = Elm.Main.init({
+            node: document.getElementById('myapp'),
+        });
+    </script>
+    <script type="text/javascript" src="./ace/ace.js"></script>
+    <script type="text/javascript" src="./src/Native/aceCodeBox.js"></script>
+    <script type="text/javascript" src="./src/Native/outputBox.js"></script>
+</html>
+

@@ -1,0 +1,77 @@
+1. 
+Class A Extends Object {
+    a: Int;
+    m(Unit){1};
+}
+Class B Extends A {}
+
+test1 = new A([1]);;
+test2 = new B([1]);;
+main =
+    Html.div [] [] [toString [(test1->m) unit, (test2->m) unit]];;
+
+Class A Extends Object {
+    a: Int;
+    m(Unit){1};
+}
+Class B Extends A {
+    m(Unit){2};
+}
+test1 = new A([1]);;
+test2 = new B([1]);;
+main =
+    Html.div [] [] [toString [(test1->m) unit, (test2->m) unit]];;
+
+2. 
+Class A Extends Object {
+    a: Int;
+    m1(Unit){1};
+    m2(Unit){2};
+}
+test1 = new A([1]);;
+test2 = new A([2]);;
+main =
+    Html.div [] [] [toString [(test1->m1) unit, (test1->m2) unit, (test2->m2) unit]];;
+
+
+3. 
+Class A Extends Object {
+    a: Int;
+    m1(Unit){1};
+    m2(Unit){2};
+}
+test = new A([1]);;
+main =
+    Html.div [] [] [toString [(test->m1) unit, (test->m2) unit]];;
+
+Class A Extends Object {
+    a: Int;
+    m1(Unit){1};
+    m2(Unit){2};
+}
+test1 = new A([1]);;
+test2 = new A([2]);;
+main =
+    Html.div [] [] [toString [(test1->m1) unit, (test1->m2) unit, (test2->m2) unit]];;
+
+4.
+Class A Extends Object {
+    a:Int;
+    m(Unit){1};
+}
+test1 = new A([1]);;
+main =
+    Html.div [] [] [toString ((test1->m) unit)];;
+
+5.
+Class A Extends Object {
+    a: Int;
+    m(Unit){1};
+}
+Class B Extends A {}
+Class C Extends A {}
+Class D Extends C {}
+test1 = new B([1]);;
+test2 = new D([1]);;
+main =
+    Html.div [] [] [toString [(test1->m) unit, (test2->m) unit]];;

@@ -1,0 +1,23 @@
+Class JComponent Extends Object {}
+
+Class JMenuItem Extends JComponent {
+    title:Ref<String>;
+
+    setTitle(title){
+        this.title:=title++"!!!"
+    };
+}
+
+Class JMenu Extends JMenuItem {
+    id:String, 
+    items:List<JMenuItem>;
+}
+
+item1 = new JMenuItem([ref "Item1"]);;
+item2 = new JMenuItem([ref "Item2"]);;
+menu = new JMenu([ref "Menu", "menu-id", [item1, item2]]);;
+
+main =
+    (item1->setTitle) "Menu-Item";
+    (menu->setTitle) "Test Menu";
+    menu;;

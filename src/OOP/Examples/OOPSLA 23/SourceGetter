@@ -1,0 +1,189 @@
+Class JComponent Extends Object {}
+
+Class JFrame Extends Container {
+    height:String, 
+    width:String, 
+    title:Ref<String>, 
+    members:Ref<List<JComponent>>, 
+    containers:Ref<List<Container>>;
+
+    setMembers(members){
+        this.members:=members
+    };
+    setContainers(members){
+        this.containers:=members
+    };
+    setTitle(title){
+        this.title:=title ++ "..?"
+    };
+}
+
+Class JLabel Extends JComponent {
+    height:String, 
+    width:String, 
+    bgcolor:String, 
+    left:String, 
+    top: String, 
+    text:Ref<String>;
+
+    setText(text){
+        this.text:=text++"..."
+    };
+}
+
+Class AbstractButton Extends JComponent {
+    left:String, 
+    top:String, 
+    height:String, 
+    width:String;
+}
+
+Class JButton Extends AbstractButton {
+    hint:Ref<String>, 
+    id:String, 
+    onclick:String;
+
+    setHint(hint){
+        this.hint:=hint++"->"
+    };
+}
+
+Class JTextComponent Extends JComponent {}
+
+Class JTextField Extends JTextComponent {
+    left:String, 
+    top:String, 
+    text:String;
+}
+
+Class JTextArea Extends JTextComponent {
+    left:String, 
+    top:String, 
+    width:String, 
+    height:String, 
+    bgcolor:Ref<String>, 
+    textcolor:Ref<String>, 
+    id:String, 
+    text:Ref<String>;
+
+    setText(text){
+        this.text:=text++"***"
+    };
+}
+
+urls =  [ ("www.google.com"
+        , "welcome to google!")
+        , ("www.bing.com"
+        , "microsoft bing")
+        , ("stackoverflow.com"
+        , "for developers, by developers")];;
+
+url = "www.bing.com";;
+code = letrec find =
+    \q =>
+        \ls =>
+            case ls of
+                [] => "Cannot get source code!"
+                | (f, l) :: xs =>
+                    if f == q then 
+                        l
+                    else 
+                        find q xs
+    in find url urls;;
+
+l = new JLabel([  "20px", "100px"
+                , "rgb(214, 214, 214)"
+                , "80px", "20px"
+                , ref "Enter URL:"]);;
+
+tf = new JTextField(["80px", "10px", url]);;
+
+b = new JButton([ "80px", "20px"
+                , "30px", "150px"
+                , ref "Get Source Code", "b"
+                , "document.getElementById('sc').innerHTML='" 
+                    ++ code 
+                    ++ "';"]);;
+
+ta = new JTextArea([  "80px", "20px"
+                    , "200px", "200px"
+                    , "white", "black"
+                    , "sc"
+                    , ref code]);;
+
+sourceGetter = new JFrame(["400px", "350px"
+                        ,  ref "Source Getter Tool"
+                        , ref [l, tf, b, ta], ref []]);;
+
+main = (sourceGetter->setTitle) "source getter tool";
+        sourceGetter;;
+--------------------------------------------
+        ( "JFrame"
+        , "new JFrame([height, width, title, members, containers])"
+        , """Html.div   [ ["height", height]
+                        , ["width", width]
+                        , ["margin", "auto"]
+                        , ["border-style", "solid"]
+                        , ["border-width", "medium"]
+                        , ["border-color", "rgb(85, 154, 243)"]
+                        , ["position", "relative"]
+                        , ["background-color", "rgb(214, 214, 214)"]] 
+                        [] 
+                        [ Html.div  [ ["background-color", "rgb(85, 154, 243)"]
+                                    , ["height", "25px"]] 
+                                    [] 
+                                    [title]
+                        , Html.div [] [] members
+                        , Html.div [] [] containers]"""),
+
+        ( "JLabel"
+        , "new JLabel([height, width, bgcolor, left, top, text])"
+        , """Html.div   [ ["height", height]
+                        , ["width", width]
+                        , ["background-color", bgcolor]
+                        , ["margin-left", left]
+                        , ["margin-right", "auto"]
+                        , ["margin-top", top]
+                        , ["margin-bottom", "auto"]
+                        , ["text-align", "left"]]
+                        []
+                        [text]"""),
+
+        ( "JButton"
+        , "new JButton([left, top, height, width, hint, id, onclick])"
+        , """Html.div   [ ["margin-left", left]
+                        , ["margin-right", "auto"]
+                        , ["margin-top", top]
+                        , ["margin-bottom", "auto"]
+                        , ["position", "absolute"]]
+                        []
+                        [ Html.button [["height", height], 
+                                    ["width", width]] 
+                                    [["id", id], 
+                                    ["onclick", onclick]] 
+                                    [hint]]
+                        """),
+
+        ( "JTextField"
+        , "new JTextField([left, top, text])"
+        , """Html.div   [ ["margin-left", left]
+                        , ["margin-right", "auto"]
+                        , ["margin-top", top]
+                        , ["margin-bottom", "auto"]
+                        , ["border", "1px solid black"]
+                        , ["width", "200px"]
+                        , ["text-align", "left"]
+                        , ["background-color", "white"]]
+                        []
+                        [text]"""),
+
+        ( "JTextArea"
+        , "new JTextArea([left, top, width, height, bgcolor, textcolor, id, text])"
+        , """Html.div   [ ["margin", left ++  " auto " ++ top ++ " auto"]
+                        , ["width", width]
+                        , ["height", height]
+                        , ["background-color", bgcolor]
+                        , ["color", textcolor]
+                        , ["text-align", "left"]]
+                        [["id", id]]
+                        [text]""")

@@ -1,0 +1,10 @@
+let states =
+  [ ["Alabama", "AL?", ""]
+  , _
+  , ["Arkansas", "AR?", ""]]
+in
+let f =
+  \[state, abbrev, cap] =>
+    [state, abbrev ++ ", " ++ cap]
+in
+    map f states

@@ -1,0 +1,30 @@
+let format =
+    \(prov, cityPop) =>
+        \countryPop =>
+            (prov, cityPop / countryPop)
+in
+let cityPopList =
+    [ ("Beijing", 1556)
+    , _
+    , ("Xingjiang", 607)
+    ]
+in
+let countryPopList = 
+    [275, 246, 1248]
+in
+let formatStates = 
+    zipWith format cityPopList countryPopList 
+in
+let addpos =
+    \prov =>
+        case prov of
+            "Shanghai"  => "ES"
+            |"Beijing"  => "N"
+            |"Xingjiang" => "WN"
+in
+let statesWithPos =
+    map (\(prov, pop)=>(prov, pop, addpos prov)) formatStates
+in
+statesWithPos
+
+-- Shanghai 7.17

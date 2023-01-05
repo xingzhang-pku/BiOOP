@@ -1,0 +1,74 @@
+letrec map =
+    \f =>
+        \ls =>
+            case ls of
+                [] => []
+                | x :: xs => (f x) :: (map f xs)
+in
+letrec nth =
+    \n =>
+        \ls =>
+            case n of
+                0 => (case ls of
+                        [] => "Err 01"
+                        | x::xs => x)
+                | a =>
+                    case ls of
+                    [] => "Err 02"
+                    | x::xs => nth (n-1) xs
+in
+let mod =
+    \a =>
+        \b =>
+            a - (a // b) * b
+in
+letrec indexedMap_ =
+    \iter =>
+        \f =>
+            \ls =>
+                case ls of
+                    [] => []
+                    | x::xs =>
+                        (f iter x)::(indexedMap_ (iter+1) f xs)
+in
+let indexedMap = indexedMap_ 0 in
+letrec length =
+    \ls =>
+        case ls of
+            [] => 0
+            | x::xs => 1 + (length xs)
+in
+let classmates =
+  [ [ "James", "Sept. 5th", "2000" ]
+  , [ "Kim",   "Jan. 16th", "1997" ]
+  , [ "Linda", "Mar. 11th", "1998" ]
+  , [ "Mary",  "Oct. 24th", "1999" ]
+  ]
+in
+let spacer = ", " in
+let trans =
+  \[name, date, year] =>
+    [name, date ++ spacer ++ year]
+in
+let rows = map trans classmates in
+let padding = ["padding", "3px"] in
+let headers = ["Name", "Date of Birth"] in
+let headerRow =
+    let styles = [padding] in
+        Html.tr [] [] (map (\hs => Html.th styles [] [hs]) headers)
+in
+let contentRows =
+    let colors = ["lightyellow", "lightblue"] in
+    let drawRow =
+      \i => \row =>
+        let color = nth (mod i (length colors)) colors in
+        let columns =
+          map (\r => Html.td [padding, ["background-color", color]] [] [r]) row
+        in
+        Html.tr [] [] columns
+    in
+      indexedMap drawRow rows
+in
+  Html.table [padding] [] [Html.tbody [] [] (headerRow :: contentRows)]
+
+

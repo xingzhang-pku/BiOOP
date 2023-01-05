@@ -1,0 +1,104 @@
+Class Td Extends Object{
+    color: Ref<String>, content: String;
+    setColor(color){
+        this.color:=color
+    };
+}
+
+Class Tr Extends Object{
+    cols:List<Td>;
+}
+
+Class Th Extends Td{}
+
+Class Table Extends Object{
+    title: Ref<String>, color: Ref<String>, 
+    rows: List<Tr>;
+    setTitle(title){
+        this.title:=title
+    };
+    setColor(color){
+        this.color:=color
+    };
+}
+
+headerContent = ["State", "Capital"];;
+stateInfos =
+    [ ["Alabama", "AL?", ""]
+    , ["Alaska", "AL?", ""]
+    , ["Arizona", "AR?", ""]
+    , ["Arkansas", "AR?", ""]
+    , ["California", "CA", ""]
+    , ["Colorado", "CO?", ""]
+    , ["Connecticut", "CO?", ""] ];;
+
+color = ref "";;
+title = ref "";;
+
+drawHeader x = 
+    new Th([color, x]);;
+headerRow = 
+    map_ "" drawHeader headerContent
+;;
+header = new Tr([headerRow]);;
+
+trans [state, abbrev, cap] =
+    [state, abbrev ++ cap]
+;;
+stateInfoRow =
+    map_ ["", "", ""] trans stateInfos
+;;
+drawColsInRow row =
+    map_ "" (\x => (new Td([color, x]))) row
+;;
+drawRow row = new Tr([drawColsInRow row]);;
+stateRow =
+    map_ ["", ""] drawRow stateInfoRow
+;;
+
+table = new Table(  [ title, color 
+                    , ([header] ++ stateRow)]);;
+
+main =  ((table->setColor) "lightgrey");
+        ((table->setTitle) "testTable"); 
+        table;;
+
+
+
+-- Template
+
+        ( "Td"
+        , "new Td([color, content])"
+        , """Html.div   [ ["border-bottom", "1px solid blue"]
+                        , ["border-right", "1px solid blue"]
+                        , ["background-color", color]
+                        , ["width", "200px"]
+                        ] 
+                        [] 
+                        [content]"""),
+        
+        ( "Tr"
+        , "new Tr([cols])"
+        , """Html.div [["display", "flex"]] [] cols"""),
+
+        ( "Th"
+        , "new Th([color, content])"
+        , """Html.div   [ ["border-bottom", "1px solid blue"]
+                        , ["border-right", "1px solid blue"]
+                        , ["background-color", color]
+                        , ["width", "200px"]
+                        , ["font-weight", "bold"]
+                        ] 
+                        [] 
+                        [content]"""),
+
+        ( "Table"
+        , "new Table([title, color, rows])"
+        , """Html.div [] [] [ Html.div  [ ["width", "400px"]
+                                        , ["border-bottom", "1px solid blue"]
+                                        , ["background-color", color]
+                                        ] 
+                                        [] 
+                                        [title]
+                            , Html.div [] [] rows
+                            ]""")

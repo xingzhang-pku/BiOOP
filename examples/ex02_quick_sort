@@ -1,0 +1,10 @@
+letrec qsort =
+    \ls =>
+        case ls of
+            [] => []
+            | pivot :: xs =>
+                let (smaller, bigger) = partition (\x=>x<pivot) xs in
+                let (r_smaller, r_bigger) = (qsort smaller, qsort bigger) in
+                _
+in
+    qsort [4,2,6,5,3,1,7]

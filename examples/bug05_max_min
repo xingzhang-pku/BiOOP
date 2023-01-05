@@ -1,0 +1,11 @@
+let max =
+    \x =>
+        \y =>
+            if x >= y then x else y
+in
+let min =
+    \x =>
+        \y =>
+            if x < y then _ else _
+in
+    max 1 2 + min 3 4

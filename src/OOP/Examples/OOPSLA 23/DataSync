@@ -1,0 +1,643 @@
+Class JComponent Extends Object {}
+
+Class Container Extends Object {}
+
+Class JFrame Extends Container {
+    height:String,
+    width:String,
+    title:Ref<String>,
+    members:Ref<List<JComponent>>,
+    containers:Ref<List<Container>>;
+
+    setMembers(members){
+        this.members:=members
+    };
+    setContainers(members){
+        this.containers:=members
+    };
+    setTitle(title){
+        this.title:=title ++ "..?"
+    };
+}
+
+Class JLabel Extends JComponent {
+    height:String,
+    width:String,
+    bgcolor:String,
+    left:String,
+    top: String,
+    text:Ref<String>;
+
+    setText(text){
+        this.text:=text
+    };
+}
+
+Class AbstractButton Extends JComponent {
+    left:String,
+    top:String,
+    height:String,
+    width:String;
+}
+
+Class JToggleButton Extends AbstractButton {}
+
+Class JRadioButton Extends JToggleButton {
+    name:String,
+    hint:Ref<String>,
+    value:String;
+
+    setHint(hint){
+        this.hint:=hint++"---"
+    };
+}
+
+Class Page Extends JFrame {
+    menuBar:VerticalMenuBar,
+    id:String,
+    display:String;
+}
+
+Class AppProg Extends Object {
+    pages:List<Page>;
+}
+
+Class VerticalMenuBar Extends JComponent {
+    menu:List<MyButton>,
+    color:String;
+}
+
+Class MyButton Extends AbstractButton {
+    hint:String,
+    color:String,
+    id:String,
+    onclick:String;
+}
+
+Class ProgressBar Extends JComponent {
+    hint:String,
+    left:String;
+}
+
+Class ActiveBtn Extends AbstractButton {
+    hint:Ref<String>;
+
+    setHint(hint){
+        this.hint:=hint++"///" 
+    };
+}
+
+Class NActiveBtn Extends ActiveBtn {}
+
+Class BtnBar Extends JComponent {
+    btns:List<ActiveBtn>,
+    top:String;
+}
+
+Class LabelPage Extends JComponent {
+    defaultoption:String,
+    option:String,
+    height:String,
+    content:List<JComponent>;
+}
+
+Class InputLabel Extends ProgressBar {
+    text:String;
+}
+
+Class DBTd Extends JComponent {
+    width:String,
+    text:String;
+}
+
+Class DBTh Extends DBTd {}
+
+Class DBTr Extends JComponent {
+    content:List<DBTd>;
+}
+
+Class DBTable Extends JComponent {
+    data:List<DBTr>,
+    height:String;
+}
+
+Class CheckBtn Extends JComponent {
+    hint:String;
+}
+
+statusStr = [ "Status", "Running...", "Details:Ready"
+            , "Source:SQL Server/127.0.0.1/TEST_2017"
+            , "Destinition:MySQL/localhost/TEST_2017_M"
+            , "Last sync time:2016-05-27 09:53:00 Duration:10.125s"
+            , "Next sync time:"
+            , "Success: 35 Fail:9"
+            , "Log"];;
+
+curProgressBar = new ProgressBar(["Current Progress", "9.5px"]);;
+totalProgressBar = new ProgressBar(["Total Progress", "30px"]);;
+
+statusLabels = 
+            map_ " " 
+                (\s => 
+                    (new JLabel(["20px", "450px", " ", "5px", "5px", s]))) 
+            statusStr;;
+
+statusBtninStatus = new MyButton([" ", " ", " ", " "
+                                , "status"
+                                , "rgb(45,228,70)"
+                                , "statuss"
+                                , "console.log('status');"]);;
+dbSettinginStatus = new MyButton([" ", " ", " ", " "
+                                , "database setting"
+                                , "rgb(43,205,65)"
+                                , "dbss"
+                                , "document.getElementById('status').style.display='none';"
+                                    ++ "document.getElementById('dbs').style.display='block';"]);;
+planinStatus = new MyButton([" ", " ", " ", " "
+                            , "Plan"
+                            , "rgb(43,205,65)"
+                            , "plans"
+                            , "document.getElementById('status').style.display='none';"
+                                ++ "document.getElementById('plan').style.display='block';"]);;
+backupinStatus = new MyButton([" ", " ", " ", " "
+                            , "backup"
+                            , "rgb(43,205,65)"
+                            , "backups"
+                            , "document.getElementById('status').style.display='none';"
+                                ++ "document.getElementById('backup').style.display='block';"]);;
+settinginStatus = new MyButton([" ", " ", " ", " "
+                            , "setting"
+                            , "rgb(43,205,65)"
+                            , "settings"
+                            , "document.getElementById('status').style.display='none';"
+                                ++ "document.getElementById('setting').style.display='block';"]);;
+
+statusBar = new VerticalMenuBar([[statusBtninStatus
+                                    , dbSettinginStatus
+                                    , planinStatus
+                                    , backupinStatus
+                                    , settinginStatus]
+                                , "rgb(43,205,65)"]);;
+
+statusbtn1 = new NActiveBtn(["20px", " ", "20px", "150px", ref "Run As Schedule"]);;
+statusbtn2 = new ActiveBtn(["150px", " ", "20px", "60px", ref "Stop"]);;
+statusbtn3 = new ActiveBtn(["20px", " ", "20px", "60px", ref "Sync"]);;
+
+statusBtnBar = new BtnBar([[statusbtn1, statusbtn2, statusbtn3], "60px"]);;
+
+statusPage = new Page(["500px"
+                        , "600px"
+                        , "Data Sync"
+                        , ref (statusLabels ++ [curProgressBar
+                            , totalProgressBar
+                            , statusBtnBar])
+                        , ref []
+                        , statusBar
+                        , "status"
+                        , "block"]);;
+
+statusBtninDB = new MyButton([" ", " ", " ", " "
+                            , "status"
+                            , "rgb(43,205,65)"
+                            , "statusd"
+                            , "document.getElementById('dbs').style.display='none';"
+                                ++ "document.getElementById('status').style.display='block';"]);;
+dbSettinginDB = new MyButton([" ", " ", " ", " "
+                            , "database setting"
+                            , "rgb(45,228,70)"
+                            , "dbsd"
+                            , "console.log('dbs');"]);;
+planinDB = new MyButton([" ", " ", " ", " "
+                        , "plan"
+                        , "rgb(43,205,65)"
+                        , "pland"
+                        , "document.getElementById('dbs').style.display='none';"
+                            ++ "document.getElementById('plan').style.display='block';"]);;
+backupinDB = new MyButton([" ", " ", " ", " "
+                        , "backup"
+                        , "rgb(43,205,65)"
+                        , "backupd"
+                        , "document.getElementById('dbs').style.display='none';" 
+                            ++ "document.getElementById('backup').style.display='block';"]);;
+settinginDB = new MyButton([" ", " ", " ", " "
+                            , "setting"
+                            , "rgb(43,205,65)"
+                            , "settingd"
+                            , "document.getElementById('dbs').style.display='none';"
+                                ++ "document.getElementById('setting').style.display='block';"]);;
+
+dbBar = new VerticalMenuBar([[statusBtninDB
+                                , dbSettinginDB
+                                , planinDB
+                                , backupinDB
+                                , settinginDB]
+                            , "rgb(43,205,65)"]);;
+
+dbTitle = new JLabel(["20px", "450px", "", "5px", "5px", "Database Setting"]);;
+
+dbLabel1 = new InputLabel(["Type", "10px", "SQL Server"]);;
+dbLabel2 = new InputLabel(["Address", "10px", "127.0.0.1"]);;
+dbLabel3 = new InputLabel(["Name", "10px", "TEST_2017"]);;
+dbLabel4 = new InputLabel(["Username", "10px", " "]);;
+dbLabel5 = new InputLabel(["Password", "10px", " "]);;
+
+dbbtn1 = new ActiveBtn(["250px", " ", "20px", "60px", ref "Test"]);;
+dbbtn2 = new ActiveBtn(["20px", " ", "20px", "60px", ref "Save"]);;
+
+dbBtnBar = new BtnBar([[dbbtn1, dbbtn2], "60px"]);;
+
+dbLabelPage = new LabelPage(["Source Database"
+                            , "Dest Database"
+                            , "450px"
+                            , [dbLabel1, dbLabel2, dbLabel3
+                            , dbLabel4, dbLabel5, dbBtnBar]]);;
+
+dbPage = new Page(["500px", "600px", "Data Sync"
+                , ref [dbTitle, dbLabelPage]
+                , ref []
+                , dbBar, "dbs", "none"]);;
+
+
+statusBtninPlan = new MyButton([" ", " ", " ", " "
+                                , "status"
+                                , "rgb(43,205,65)"
+                                , "statusp"
+                                , "document.getElementById('plan').style.display='none';"
+                                    ++ "document.getElementById('status').style.display='block';"]);;
+
+dbSettinginPlan = new MyButton([" ", " ", " ", " "
+                                , "database setting"
+                                , "rgb(43,205,65)"
+                                , "dbsp"
+                                , "document.getElementById('plan').style.display='none';"
+                                    ++ "document.getElementById('dbs').style.display='block';"]);;
+
+planinPlan = new MyButton([" ", " ", " ", " "
+                            , "plan"
+                            , "rgb(45,228,70)"
+                            , "planp"
+                            , "console.log('dbs');"]);;
+backupinPlan = new MyButton([" ", " ", " ", " "
+                            , "backup"
+                            , "rgb(43,205,65)"
+                            , "backupp"
+                            , "document.getElementById('plan').style.display='none';"
+                                ++ "document.getElementById('backup').style.display='block';"]);;
+
+settinginPlan = new MyButton([" ", " ", " ", " "
+                            , "setting"
+                            , "rgb(43,205,65)"
+                            , "settingp"
+                            , "document.getElementById('plan').style.display='none';"
+                                ++ "document.getElementById('setting').style.display='block';"]);;
+
+planBar = new VerticalMenuBar([[statusBtninPlan
+                                , dbSettinginPlan
+                                , planinPlan
+                                , backupinPlan
+                                , settinginPlan]
+                            , "rgb(43,205,65)"]);;
+
+planTitle = new JLabel(["20px", "450px", "", "5px", "5px", "Plan"]);;
+
+planRadio1 = new JRadioButton(["taskPlan", "5 minutes", "5min"]);;
+planRadio2 = new JRadioButton(["taskPlan", "15 minutes", "15min"]);;
+planRadio3 = new JRadioButton(["taskPlan", "30 minutes", "30min"]);;
+planRadio4 = new JRadioButton(["taskPlan", "1 hour", "1h"]);;
+planRadio5 = new JRadioButton(["taskPlan", "1 day", "1d"]);;
+planRadio6 = new JRadioButton(["taskPlan", "1 week", "1w"]);;
+planRadio7 = new JRadioButton(["taskPlan"
+                            ,  "specific time of a day(hh:mm:ss): 23:45:00"
+                            ,  "userdefine"]);;
+
+planBtnBar = new BtnBar([[new ActiveBtn(["300px", " ", "20px", "60px", "Save"])], "60px"]);;
+
+planPage = new Page(["500px", "600px", "Data Sync"
+                    , ref [planTitle, planRadio1, planRadio2
+                        , planRadio3, planRadio4, planRadio5
+                        , planRadio6, planRadio7, planBtnBar]
+                    , ref [], planBar, "plan", "none"]);;
+
+statusBtninBackup = new MyButton([" ", " ", " ", " "
+                                , "status"
+                                , "rgb(43,205,65)"
+                                , "statusb"
+                                , "document.getElementById('backup').style.display='none';"
+                                    ++ "document.getElementById('status').style.display='block';"]);;
+dbSettinginBackup = new MyButton([" ", " ", " ", " "
+                                , "database setting"
+                                , "rgb(43,205,65)"
+                                , "dbsb"
+                                , "document.getElementById('backup').style.display='none';"
+                                    ++ "document.getElementById('dbs').style.display='block';"]);;
+planinBackup = new MyButton([" ", " ", " ", " "
+                            , "plan"
+                            , "rgb(43,205,65)"
+                            , "planb"
+                            , "document.getElementById('backup').style.display='none';"
+                                ++ "document.getElementById('plan').style.display='block';"]);;
+backupinBackup = new MyButton([" ", " ", " ", " "
+                            , "backup"
+                            , "rgb(45,228,70)"
+                            , "backupb"
+                            , "console.log('backup');"]);;
+settinginBackup = new MyButton([" ", " ", " ", " "
+                                , "setting"
+                                , "rgb(43,205,65)"
+                                , "settingb"
+                                , "document.getElementById('backup').style.display='none';"
+                                    ++ "document.getElementById('setting').style.display='block';"]);;
+
+backupBar = new VerticalMenuBar([[statusBtninBackup
+                                    , dbSettinginBackup
+                                    , planinBackup
+                                    , backupinBackup
+                                    , settinginBackup]
+                                , "rgb(43,205,65)"]);;
+
+backupTitle = new JLabel(["20px", "450px", "", "5px", "5px", "Backup"]);;
+
+backupLabel = new JLabel(["20px", "450px", "", "5px", "5px", "Dest Database"]);;
+
+backupbtn1 = new ActiveBtn(["200px", " ", "20px", "60px", ref "New"]);;
+backupbtn2 = new ActiveBtn(["20px", " ", "20px", "60px", ref "Restore"]);;
+backupbtn3 = new ActiveBtn(["20px", " ", "20px", "60px", ref "Delete"]);;
+
+backupBtnBar = new BtnBar([[backupbtn1, backupbtn2, backupbtn3], "-20px"]);;
+
+backupHeader = new DBTr([[new DBTh(["100px", "Number"])
+                        , new DBTh(["297px", "Name"])
+                        , new DBTh(["100px", "Size"])]]);;
+
+backupData = new DBTr([[new DBTd(["100px", "1"])
+                        , new DBTd(["297px", "demo_back.sql"])
+                        , new DBTd(["100px", ".00B"])]]);;
+
+backupTable = new DBTable([[backupHeader, backupData], "420px"]);;
+
+backupPage = new Page(["500px", "600px", "Data Sync"
+                    , ref [backupTitle, backupLabel, backupBtnBar, backupTable]
+                    , ref [], backupBar, "backup", "none"]);;
+
+statusBtninS = new MyButton([" ", " ", " ", " "
+                            , "status"
+                            , "rgb(43,205,65)"
+                            , "statusss"
+                            , "document.getElementById('setting').style.display='none';"
+                                ++ "document.getElementById('status').style.display='block';"]);;
+
+dbSettinginS = new MyButton([" ", " ", " ", " "
+                            , "database setting"
+                            , "rgb(43,205,65)"
+                            , "dbsss"
+                            , "document.getElementById('setting').style.display='none';"
+                                ++ "document.getElementById('dbs').style.display='block';"]);;
+
+planinS = new MyButton([" ", " ", " ", " "
+                        , "plan"
+                        , "rgb(43,205,65)"
+                        , "planss"
+                        , "document.getElementById('setting').style.display='none';"
+                            ++ "document.getElementById('plan').style.display='block';"]);;
+
+backupinS = new MyButton([" ", " ", " ", " "
+                        , "backup"
+                        , "rgb(43,205,65)"
+                        , "backupss"
+                        , "document.getElementById('setting').style.display='none';"
+                            ++ "document.getElementById('backup').style.display='block';"]);;
+
+settinginS = new MyButton([" ", " ", " ", " "
+                            , "setting"
+                            , "rgb(45,228,70)"
+                            , "settingss"
+                            , "console.log('setting');"]);;
+
+sBar = new VerticalMenuBar([[statusBtninS, dbSettinginS, planinS, backupinS, settinginS]
+                            , "rgb(43,205,65)"]);;
+
+sTitle = new JLabel(["20px", "450px", "", "5px", "5px", "Setting"]);;
+
+sbtn1 = new ActiveBtn(["5px", " "
+                    , "20px", "350px"
+                    , ref "Table-Field Configuration"]);;
+sbtn2 = new ActiveBtn(["5px", " "
+                    , "20px", "350px"
+                    , ref "Delete Log"]);;
+sbtn3 = new ActiveBtn(["5px", " "
+                    , "20px", "350px"
+                    , ref "Delete Backup(!)"]);;
+
+scheck1 = new CheckBtn(["Backup Automatically"]);;
+scheck2 = new CheckBtn(["Hard Mode"]);;
+scheck3 = new CheckBtn(["Developer Mode"]);;
+
+sLabel1 = new InputLabel(["MySQL", "10px", "D:\\MySQL"]);;
+
+sbtn = new ActiveBtn(["300px", " "
+                    , "20px", "60px", "Save"]);;
+
+sBtnBar = new BtnBar([[sbtn], "60px"]);;
+
+sLabelPage = new LabelPage(["Advanced Options", "About", "450px"
+                            , [sbtn1, sbtn2, sbtn3
+                            , scheck1, sLabel1
+                            , scheck2
+                            , scheck3, sBtnBar]]);;
+
+sPage = new Page(["500px", "600px", "Data Sync"
+                , ref [sTitle, sLabelPage]
+                , ref []
+                , sBar
+                , "setting"
+                , "none"]);;
+
+app = new AppProg([[statusPage, dbPage, planPage, backupPage, sPage]]);;
+
+main =  (statusbtn1->setHint) "Run As Schedule";
+        (statusbtn2->setHint) "Stop";
+        app;;
+--------------------------------------------------------------
+        ( "JFrame"
+        , "new JFrame([height, width, title, members, containers])"
+        , """Html.div   [ ["height", height]
+                        , ["width", width]
+                        , ["margin", "auto"]
+                        , ["border-style", "solid"]
+                        , ["border-width", "medium"]
+                        , ["border-color", "rgb(85, 154, 243)"]
+                        , ["position", "relative"]
+                        , ["background-color", "rgb(214, 214, 214)"]] 
+                        [] 
+                        [ Html.div  [ ["background-color", "rgb(85, 154, 243)"]
+                                    , ["height", "25px"]] 
+                                    [] 
+                                    [title]
+                        , Html.div [] [] members
+                        , Html.div [] [] containers]"""),
+
+        ( "JLabel"
+        , "new JLabel([height, width, bgcolor, left, top, text])"
+        , """Html.div   [ ["height", height]
+                        , ["width", width]
+                        , ["background-color", bgcolor]
+                        , ["margin-left", left]
+                        , ["margin-right", "auto"]
+                        , ["margin-top", top]
+                        , ["margin-bottom", "auto"]
+                        , ["text-align", "left"]]
+                        []
+                        [text]"""),
+
+        ( "JRadioButton"
+        , "new JRadioButton([name, hint, value])"
+        , """Html.div [] [] [ Html.input [] [ ["type", "radio"]
+                                            , ["name", name]
+                                            , ["value", value]
+                                            , ["id", name ++ hint]] []
+                            , hint
+                            ]"""),
+
+        ( "Page"
+        , "new Page([height, width, title, members, containers, menuBar, id, display])"
+        , """Html.div   [ ["height", height]
+                        , ["width", width]
+                        , ["margin", "auto auto auto auto"]
+                        , ["border-style", "solid"]
+                        , ["border-width", "medium"]
+                        , ["border-color", "rgb(85, 154, 243)"]
+                        , ["position", "relative"]
+                        , ["display", display]] 
+                        [ ["id", id]] 
+                        [ Html.div  [ ["height", "25px"]
+                                    , ["text-align", "left"]] 
+                                    [] 
+                                    [title]
+                        , Html.div [["display", "flex"]] [] 
+                                    [ menuBar
+                                    , Html.div [["position", "relative"]] [] members]
+                        , Html.div [] [] containers]"""),
+
+        ( "AppProg"
+        , "new AppProg([pages])"
+        , """Html.div [] [] pages"""),
+
+        ( "VerticalMenuBar"
+        , "new VerticalMenuBar([menu, color])"
+        , """Html.div [ ["background-color", color]
+                        , ["width", "100px"]
+                        , ["height", "480px"]] [] menu"""),
+
+        ( "MyButton"
+        , "new MyButton([left, top, height, width, hint, color, id, onclick])"
+        , """Html.div   [["background-color", color]
+                        ,["height", "50px"]]
+                        [["id", id]]
+                        [ Html.div [] [] [hint]
+                        , Html.script [] [] 
+                        ["document.getElementById('" ++ id ++ "').addEventListener("
+                            ++ "'click', (ev)=>{" 
+                            ++ onclick 
+                            ++ "})"]]"""),
+
+        ( "ProgressBar"
+        , "new ProgressBar([hint, left])"
+        , """Html.div [["display", "flex"], 
+                        ["margin-left", "5px"], 
+                        ["margin-top", "5px"]] 
+                        [] 
+                        [ Html.div [] [] [hint]
+                        , Html.div [["height", "20px"], 
+                                    ["width", "300px"], 
+                                    ["background-color", "grey"], 
+                                    ["margin-left", left]] [] []]"""),
+
+        ( "ActiveBtn"
+        , "new ActiveBtn([left, top, height, width, hint])"
+        , """Html.div   [ ["margin-left", left]
+                        , ["height", height]
+                        , ["width", width]
+                        , ["border", "1px solid rgb(45,228,70)"]
+                        , ["color", "rgb(45,228,70)"]] [] [hint]"""),
+
+        ( "NActiveBtn"
+        , "new NActiveBtn([left, top, height, width, hint])"
+        , """Html.div   [ ["margin-left", left]
+                        , ["height", height]
+                        , ["width", width]
+                        , ["border", "1px solid rgb(218,218,218)"]
+                        , ["color", "rgb(218,218,218)"]] [] [hint]"""),                
+
+        ( "BtnBar"
+        , "new BtnBar([btns, top])"
+        , """Html.div [["display", "flex"], ["margin-top", top]] [] btns"""),
+
+        ( "LabelPage"
+        , "new LabelPage([defaultoption, option, height, content])"
+        , """Html.div [["display", "flex"]] []  
+                    [ Html.div  [ ["background-color", "black"]
+                                , ["height", height]
+                                , ["width", "100px"]] [] 
+                                [ Html.div  [ ["height", "50px"]
+                                            , ["background-color", "rgb(45,228,70)"]
+                                            , ["color", "white"]] 
+                                            [] 
+                                            [defaultoption]
+                                , Html.div  [ ["height", "50px"]
+                                            , ["background-color", "rgb(43,205,65)"]
+                                            , ["color", "white"]] 
+                                            [] 
+                                            [option]]
+                    , Html.div [] [] content]"""),
+
+        ( "InputLabel"
+        , "new InputLabel([hint, left, text])"
+        , """Html.div [["display", "flex"]
+                    ,  ["margin-left", "5px"]
+                    ,  ["margin-top", "5px"]] 
+                    [] 
+                    [ Html.div [["width", "80px"]] 
+                    [] 
+                    [hint]
+                    , Html.div [["height", "20px"], 
+                                ["width", "300px"], 
+                                ["border", "1px solid grey"], 
+                                ["margin-left", left]] 
+                                [] 
+                                [text]]"""),
+
+        ( "DBTd"
+        , "new DBTd([width, text])"
+        , """Html.div [["border", "1px solid rgb(212,212,212)"]
+                    ,  ["width", width]] 
+                    [] 
+                    [text]"""),
+
+        ( "DBTh"
+        , "new DBTh([width, text])"
+        , """Html.div [["border", "1px solid black"]
+                    ,  ["width", width]] 
+                    [] 
+                    [text]"""),
+
+        ( "DBTr"
+        , "new DBTr([content])"
+        , """Html.div [["display", "flex"]
+                    ,  ["background-color", "white"]] 
+                    [] 
+                    content"""),
+
+        ( "DBTable"
+        , "new DBTable([data, height])"
+        , """Html.div [["background-color", "rgb(212,212,212)"]
+                    ,  ["height", height]
+                    ,  ["margin-top", "10px"]] 
+                    [] 
+                    data"""),
+
+        ( "CheckBtn"
+        , "new CheckBtn([hint])"
+        , """Html.div [["display", "flex"]] 
+                        [] 
+                        [ Html.input [] [["type", "checkbox"]] []
+                        , Html.div [["margin-left", "10px"]] [] [hint]]""")

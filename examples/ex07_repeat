@@ -1,0 +1,8 @@
+letrec repeat =
+    \n =>
+        \x =>
+            case n of
+                0 => []
+                | n1 => x :: (repeat (n1-1) x)
+in
+repeat 3 4

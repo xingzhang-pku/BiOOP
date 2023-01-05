@@ -1,0 +1,207 @@
+/* TODO: Size Adaption*/
+
+#bi-preview {
+    background-color: lightyellow;
+    width: 100%;
+    height: 100%;
+}
+
+#menu-bar {
+    background-color: #CC9966;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 4.5%;
+}
+
+.title {
+    color: white;
+    font-family: "Verdana";
+    font-size: 20px;
+    font-weight: bold;
+    margin-top: 0.5%;
+    margin-left: 3%;
+    width: 240px;
+}
+
+.btn {
+    background-color: #99CC66;
+    font-size: medium;
+    font-weight: 500;
+    margin-top: 0.5%;
+    margin-left: 2%;
+    height: 27.5px;
+    width: 80px;
+    font-family: "Verdana";
+    color: white;
+    border: none;
+    border-radius: 3px;
+    box-shadow: 1px 1px rgba(0, 0, 0, 0.2);
+}
+
+.btn:hover {
+    background-color: #99BB66;
+}
+
+.btn:active {
+    background-color: #99BB66;
+    box-shadow: 0 1px #666;
+    transform: translateY(1px);
+}
+
+/* TODO: To Delete */
+.uneval {
+    font-size: 13.7px;
+    width: 150px;
+    margin-left: 1%;
+}
+
+#editor { 
+    position: absolute;
+    top: 4.5%;
+    left: 1%; 
+    width: 52%;
+    height: 69%;
+    margin-top: 1%;
+    margin-left: 1%;
+    border-radius: 5px;
+    box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
+}
+
+#hole-bindings {
+    position: absolute;
+    text-align: center;
+    background-color: white;
+    top: 75%;
+    left: 1%;
+    width: 52%;
+    height: 22%;
+    margin-top: 1%;
+    margin-left: 1%;
+    border-radius: 5px;
+    box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
+}
+
+.area-title {
+    background-color: #669999;
+    font-family: "Verdana";
+    color: white;
+    border-radius: 5px 5px 0 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+#hb-table {
+    width: 100%;
+}
+
+table th {
+    font-family: "Verdana";
+    font-weight: 100;
+    text-align: center;
+    border-bottom: 2px solid #669999;
+}
+
+table td {
+    font-family: "Verdana";
+    font-size: 14px;
+    text-align: left;
+    border-bottom: 1px solid #669999;
+}
+
+.hole-name {
+    width: 100px;
+    border-right: 2px solid #669999;
+}
+
+.hole-value {
+    width: 80px;
+    border-left: 2px solid #669999;
+}
+
+#output {
+    position: absolute;
+    text-align: center;
+    background-color: white;
+    top: 4.5%;
+    left: 55%;
+    width: 42%;
+    height: 40%;
+    margin-top: 1%;
+    margin-left: 1%;
+    border-radius: 5px;
+    box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
+}
+
+#context {
+    position: absolute;
+    text-align: left;
+    background-color: white;
+    top: 46%;
+    left: 55%;
+    width: 42%;
+    height: 43%;
+    margin-top: 1%;
+    margin-left: 1%;
+    border-radius: 5px;
+    box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
+}
+
+#path {
+    position: absolute;
+    text-align: left;
+    background-color: white;
+    font-family: "Verdana";
+    font-size: 14px;
+    top: 91%;
+    left: 55%;
+    width: 42%;
+    height: 5%;
+    margin-top: 1%;
+    margin-left: 1%;
+    border-radius: 5px;
+    box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
+}
+
+#output-area {
+    width: 99%;
+    height: 92%;
+    margin-top: 2px;
+}
+
+#console-output {
+    font-family: "Verdana";
+    width: 100%;
+    height: 100%;
+    border: none;
+    resize: none;
+}
+
+#select-hole {
+    height: 18px;
+    font-family: "Verdana";
+    margin-left: 5px;
+    margin-top: 2px;
+    margin-bottom: 2px;
+}
+
+.context-item {
+    width: 100%;
+    border: none;
+    padding: 0;
+}
+
+#oop-output {
+    position: absolute;
+    text-align: left;
+    background-color: white;
+    top: 4.5%;
+    left: 55%;
+    width: 42%;
+    height: 69%;
+    margin-top: 1%;
+    margin-left: 1%;
+    border-radius: 5px;
+    box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2); 
+}

@@ -1,0 +1,31 @@
+let days = 3 in
+let venue =
+    days * 10000
+in
+let lunch = 30 in
+let (participants, fee, sponsors) =
+    (200, 50, 20000)
+in
+let expenses =
+    participants * lunch * days + venue
+in
+let income =
+    participants * fee + sponsors
+in
+let surplus =
+    income - expenses
+in
+let
+    btn =
+        if surplus == 0 then
+            Html.h4 [] [] ["Hurry, the budget is coherent!"]
+        else
+            Html.button [] 
+                [["onclick", "document.getElementById('surplus').innerText='0'"]]
+                ["Set to zero"]
+in
+    Html.div [["margin", "20px"], ["text-align", "left"]] [] [
+        "Current surplus of conference:"
+    ,   Html.h3 [] [["id", "surplus"]] [toString surplus]
+    ,   btn
+    ]

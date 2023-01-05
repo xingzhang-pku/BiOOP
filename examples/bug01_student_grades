@@ -1,0 +1,33 @@
+(1)
+let students =
+    [ [88.0, 89.0, 87.0]
+    , [76.0, 93.0, 95.0]
+    , [93.0, 79.0, 84.0]
+    ]
+in
+let (hwr, midr, finr) = 
+    (30.0, 0.3, 0.4)
+in
+let weighted_average =
+    \[hw, midterm, final] =>
+        hwr * hw + midr * midterm + finr * final
+in
+    map weighted_average students
+
+-- [ 2701.5, 2345.9, 2847.3 ]
+
+(2)
+let students =
+    [ [88.0, 89.0, 87.0]
+    , [76.0, 93.0, 95.0]
+    , [93.0, 79.0, 84.0]
+    ]
+in
+let (hwr, midr, finr) = 
+    (30.0, 0.3, 0.4)
+in
+let weighted_average =
+    \[hw, midterm, final] =>
+        hwr * hw + _ + finr * final
+in
+    map weighted_average students 

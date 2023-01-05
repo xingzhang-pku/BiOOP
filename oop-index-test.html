@@ -1,0 +1,30 @@
+<!DOCTYPE HTML>
+<html>
+
+    <head>
+        <meta charset="UTF-8">
+        <title>BiOOP</title>
+        <link rel="stylesheet" href="./style/main.css" />
+        <link rel="stylesheet" href="./src/OOP/style.css">
+        <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
+        <script type="text/javascript" src="oop-elm-test.js"></script>
+    </head>
+
+    <body>
+        <div id="myapp"></div>
+    </body>
+
+    <script type="text/javascript">
+        st = document.body.style;
+        st.margin = 0;
+        st.height = "968px";
+        var app = Elm.OOP.Main.init({
+            node: document.getElementById('myapp'),
+        });
+    </script>
+    <script type="text/javascript" src="./ace/ace.js"></script>
+    <script type="text/javascript" src="./src/OOP/Native/aceCodeBox.js"></script>
+    <script type="text/javascript" src="./src/OOP/Native/outputBox.js"></script>
+    <script type="text/javascript" src="./src/OOP/Native/objects.js"></script>
+    <script type="text/javascript" src="./src/OOP/Native/templates.js"></script>
+</html>

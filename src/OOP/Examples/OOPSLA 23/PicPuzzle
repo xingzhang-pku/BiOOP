@@ -1,0 +1,238 @@
+Class JComponent Extends Object {}
+
+Class Container Extends Object {}
+
+Class JFrame Extends Container {
+    height:String, 
+    width:String, 
+    title:Ref<String>, 
+    members:Ref<List<JComponent>>, 
+    containers:Ref<List<Container>>;
+
+    setMembers(members){
+        this.members:=members
+    };
+    setContainers(members){
+        this.containers:=members
+    };
+    setTitle(title){
+        this.title:=title ++ "..?"
+    };
+}
+
+Class AbstractButton Extends JComponent {
+    left:String, 
+    top:String, 
+    height:String, 
+    width:String;
+}
+
+Class JDialog Extends Container {
+    title:Ref<String>, 
+    hint:String, 
+    id:String;
+
+    setTitle(title){
+        this.title:=title ++ ">>>"
+    };
+}
+
+Class ImgBtn Extends AbstractButton {
+    hint:String, 
+    id:String, 
+    onclick:String, 
+    imgsrc:String, 
+    tag:String;
+}
+
+Class Image Extends JComponent {
+    left:String, 
+    top:String, 
+    height:String, 
+    width:String, 
+    src:String, 
+    hint:String;
+}
+
+btnHint =   [("1", [1, 3])
+            , ("5", [0, 2, 4])
+            , ("2", [1, 5])
+            , ("7", [0, 4, 6])
+            , ("4", [1, 3, 5, 7])
+            , ("6", [2, 4, 8])
+            , ("8", [3, 7])
+            , ("9", [4, 6, 8])
+            , ("3", [5, 7])];;
+
+checkScript = 
+    letrec concatScript =
+        \i => 
+            if(i < 9) then 
+                "(document.getElementById('b" 
+                ++ (toString i) 
+                ++ "').getAttribute('tag') == '" 
+                ++ (toString i) 
+                ++ "') && " ++ (concatScript (i + 1))
+            else 
+                "(document.getElementById('b" 
+                ++ (toString i) 
+                ++ "').getAttribute('tag') == '" 
+                ++ (toString i) 
+                ++ "')"
+    in 
+        "if(" 
+        ++ (concatScript 1) 
+        ++ "){document.getElementById('dialog').removeAttribute('hidden');}" ;;
+
+getClickScript =
+    letrec getScript =
+        \neighbors =>
+            \i =>
+                case neighbors of
+                    n :: ns => 
+                        "console.log(" 
+                        ++ (toString i) 
+                        ++ ");if(document.getElementById('b" 
+                        ++ (toString (n + 1)) 
+                        ++ "').getAttribute('tag') == '3'){"
+                        ++ "document.getElementById('b" 
+                        ++ (toString (n + 1)) 
+                        ++ "').setAttribute('tag'," 
+                        ++ " document.getElementById('b" 
+                        ++ (toString i) 
+                        ++ "').getAttribute('tag')); " 
+                        ++ "document.getElementById('b" 
+                        ++ (toString i) 
+                        ++ "').setAttribute('tag', '3');"
+                        ++ "document.getElementById('b" 
+                        ++ (toString (n + 1)) 
+                        ++ "').style.background = "
+                        ++ "document.getElementById('b" 
+                        ++ (toString i) 
+                        ++ "').style.background;"
+                        ++ "document.getElementById('b" 
+                        ++ (toString i) 
+                        ++ "').style.background = 'url(./pic/3.jpg)';}"
+                        ++ (getScript ns i)
+                    | [] => ""
+    in getScript;;
+
+btns = 
+    letrec getBtn =
+        \hint =>
+            \i =>
+                case hint of
+                    [] => []
+                    | (h, ns) :: hs =>
+                        let 
+                            l =
+                                ((i - 1) - 3 * ((i - 1) // 3)) * 105 + 10
+                        in 
+                        let 
+                            t =
+                                ((i - 1) // 3) * 105 + 70 
+                        in
+                            (new ImgBtn([((toString l) ++ "px")
+                                        , ((toString t) ++ "px")
+                                        , "95px"
+                                        , "95px"
+                                        , " "
+                                        , "b" ++ (toString i)
+                                        , (getClickScript ns i) ++ checkScript
+                                        , "url(./pic/" ++ h ++ ".jpg)"
+                                        , h])) 
+                            :: (getBtn hs (i + 1))
+    in (getBtn btnHint 1);;
+
+success = new JDialog([ref "Message", "Congratulations! You won.", "dialog"]);;
+
+hintimg = new Image(["20px", "20px", "41px", "41px"
+                    , "NOTE: icon has power to swap with neighbour icon=>"
+                    , "url(./pic/starB0.jpg)"]);;
+
+sampleimg = new Image([   "400px", "100px"
+                        , "200px", "200px"
+                        , "sample"
+                        , "url(./pic/main.jpg)"]);;
+
+picPuzzle = new JFrame(["500px", "700px"
+                        , ref "Puzzle"
+                        , ref ([hintimg, sampleimg] ++ btns)
+                        , ref [success]]);;
+
+main = (picPuzzle->setTitle) "puzzle";
+        picPuzzle;;
+----------------------------------------
+        ( "JFrame"
+        , "new JFrame([height, width, title, members, containers])"
+        , """Html.div   [ ["height", height]
+                        , ["width", width]
+                        , ["margin", "auto"]
+                        , ["border-style", "solid"]
+                        , ["border-width", "medium"]
+                        , ["border-color", "rgb(85, 154, 243)"]
+                        , ["position", "relative"]
+                        , ["background-color", "rgb(214, 214, 214)"]] 
+                        [] 
+                        [ Html.div  [ ["background-color", "rgb(85, 154, 243)"]
+                                    , ["height", "25px"]] 
+                                    [] 
+                                    [title]
+                        , Html.div [] [] members
+                        , Html.div [] [] containers]"""),
+
+        ( "JDialog"
+        , "new JDialog([title, hint, id])"
+        , """Html.div   [ ["height", "150px"]
+                        , ["width", "200px"]
+                        , ["margin", "auto auto auto auto"]
+                        , ["border-style", "solid"]
+                        , ["border-width", "medium"]
+                        , ["border-color", "rgb(85, 154, 243)"]
+                        , ["position", "relative"]
+                        , ["background-color", "rgb(214, 214, 214)"]] 
+                        [ ["id", id]
+                        , ["hidden", ""]]
+                        [ Html.div  [ ["background-color", "rgb(85, 154, 243)"]
+                                    , ["height", "25px"]] 
+                                    [] 
+                                    [title]
+                        , Html.div [] [["id", id ++ "hint"]] [hint]
+                        , Html.button [] [["id", id ++ "btn"]] ["Ok"]
+                        , Html.script [] [] ["document.getElementById('" ++ id 
+                            ++ "btn').addEventListener('click', function(){"
+                            ++ "document.getElementById('" 
+                            ++ id 
+                            ++ "').setAttribute('hidden', true);})"
+                        ]]"""),
+
+        ( "ImgBtn"
+        , "new ImgBtn([left, top, height, width, hint, id, onclick, imgsrc, tag])"
+        , """Html.div   [ ["margin-left", left]
+                        , ["margin-right", "auto"]
+                        , ["margin-top", top]
+                        , ["margin-bottom", "auto"]
+                        , ["position", "absolute"]]
+                        []
+                        [ Html.button   [ ["height", height]
+                                        , ["width", width]
+                                        , ["background", imgsrc]] 
+                                        [ ["id", id]
+                                        , ["tag", tag]
+                                        , ["onclick", onclick]] []
+                        ]"""),
+        
+        ( "Image"
+        , "new Image([left, top, height, width, hint, src])"
+        , """Html.div   [ ["margin-left", left]
+                        , ["margin-right", "auto"]
+                        , ["margin-top", top]
+                        , ["margin-bottom", "auto"]
+                        , ["display", "flex"]
+                        , ["position", "absolute"]]
+                        []
+                        [ Html.div [] [] [hint]
+                        , Html.div  [ ["height", height]
+                                    , ["width", width]
+                                    , ["background", src]] 
+                                    [] []]""")

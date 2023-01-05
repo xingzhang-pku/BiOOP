@@ -1,0 +1,331 @@
+Class JComponent Extends Object {}
+
+Class Container Extends Object {}
+
+Class JFrame Extends Container {
+    height:String, 
+    width:String, 
+    title:Ref<String>, 
+    members:Ref<List<JComponent>>, 
+    containers:Ref<List<Container>>;
+
+    setMembers(members){
+        this.members:=members
+    };
+    setContainers(members){
+        this.containers:=members
+    };
+    setTitle(title){
+        this.title:=title ++ "..?"
+    };
+}
+
+Class JDialog Extends Container {
+    title:Ref<String>, 
+    hint:String, 
+    id:String;
+
+    setTitle(title){
+        this.title:=title ++ ">>>"
+    };
+}
+
+Class JTextComponent Extends JComponent {}
+
+Class JTextArea Extends JTextComponent {
+    left:String, 
+    top:String, 
+    width:String, 
+    height:String, 
+    bgcolor:Ref<String>, 
+    textcolor:Ref<String>, 
+    id:String, 
+    text:Ref<String>;
+
+    setText(text){
+        this.text:=text++"***"
+    };
+}
+
+Class JMenuItem Extends JComponent {
+    title:Ref<String>;
+
+    setTitle(title){
+        this.title:=title++"!!!"
+    };
+}
+
+Class JMenu Extends JMenuItem {
+    id:String, 
+    items:List<JMenuItem>;
+}
+
+Class JMenuBar Extends JComponent {
+    menu:List<JMenuItem>;
+}
+
+Class MyMenuItem Extends JMenuItem {
+    id:String, onclick:String;
+}
+
+Class ColorChooser Extends JDialog {
+    destid:String;
+}
+
+fileMenuStr = 
+    [ "Save", "Save As..."
+    , "Page Setup..."
+    , "Print", "Exit"];;
+
+editMenuStr = [ "Undo"
+            ,   "Cut"
+            ,   "Copy"
+            ,   "Paste"
+            ,   "Find.."
+            ,   "Find Next"
+            ,   "Replace"
+            ,   "Go to"
+            ,   "Select All"
+            ,   "Time/Date"];;
+
+formatMenuStr = ["wordWrap", "Font"];;
+
+defaultFile = "This is a NotePad developed with BiOOP.";;
+
+helpStr = "This is document of NotePad.";;
+
+aboutStr = "We develop this with BiOOP, a direct manipulation tool for OOP.";;
+
+newOp = new MyMenuItem([  ref "New.."
+                        , "newfile"
+                        , "document.getElementById('textarea').innerHTML='';"]);;
+
+openOp = new MyMenuItem([ ref "Open.."
+                        , "openfile"
+                        , "document.getElementById('textarea').innerHTML='" ++ defaultFile ++ "';"]);;
+
+delOp = new MyMenuItem([  ref "Delete"
+                        , "delete"
+                        , "document.getElementById('textarea').innerHTML='';"]);;
+
+textColorOp = new MyMenuItem([ref "Set Text Color..."
+                                , "textcolorop"
+                                , "document.getElementById('text').removeAttribute('hidden');"]);;
+
+padColorOp = new MyMenuItem([ref  "Set Pad Color..."
+                                , "padcolorop"
+                                , "document.getElementById('pad').removeAttribute('hidden');"]);;
+
+helpOp = new MyMenuItem([ref  "Help Topic"
+                            , "doc"
+                            , "document.getElementById('helpdoc').removeAttribute('hidden');"]);;
+
+aboutOp = new MyMenuItem([ref "About Notepad"
+                            , "about"
+                            , "document.getElementById('aboutdialog').removeAttribute('hidden');"]);;
+
+padColor = new ColorChooser([ref  "Choose Color"
+                                , "choose a color as pad's background"
+                                , "pad"
+                                , "textarea", "backgroundColor"]);;
+
+textColor = new ColorChooser([ref "Choose Color"
+                                , "choose a color as pad's text color"
+                                , "text"
+                                , "textarea"
+                                , "color"]);;
+
+helpDialog = new JDialog([ref "Help Document"
+                            , helpStr
+                            , "helpdoc"]);;
+
+aboutDialog = new JDialog([ref "About"
+                            ,  aboutStr
+                            ,  "aboutdialog"]);;
+
+mapStrToItem s =
+    map_ ""
+        (\n => 
+            new JMenuItem([ref n])) 
+    s;;
+
+fileMenu = new JMenu([ref "File"
+                        , "file"
+                        , newOp :: (openOp :: (mapStrToItem fileMenuStr))]);;
+
+editMenu = new JMenu([ref "Edit", "edit"
+                        , delOp :: (mapStrToItem editMenuStr)]);;
+
+formatMenu = new JMenu([ref "Format"
+                        ,   "format"
+                        ,   (mapStrToItem formatMenuStr) ++
+                            [textColorOp, padColorOp]]);;
+
+viewMenu = new JMenu([ref "View", "view"
+                        , [(new JMenuItem(["Status Bar"]))]]);;
+
+helpMenu = new JMenu([ref "Help"
+                        , "help"
+                        , [helpOp, aboutOp]]);;
+
+textArea = new JTextArea(["5px", "5px", "590px", "430px"
+                        , "white", "black", "textarea"
+                        , ref defaultFile]);;
+
+menuBar = new JMenuBar([[fileMenu, editMenu, formatMenu, viewMenu, helpMenu]]);;
+
+notepad = new JFrame(["500px", "600px"
+                    , ref "NotePad"
+                    , ref [menuBar, textArea]
+                    , ref [padColor, textColor
+                    , helpDialog
+                    , aboutDialog]]);;
+
+main = (notepad->setTitle) "Notepad";
+        (editMenu->setTitle) "edit";
+        (fileMenu->setTitle) "file";
+        notepad;;
+-----------------------------------------------------------------
+
+        ( "MyMenuItem"
+        , "new MyMenuItem([title, id, onclick])"
+        , """Html.div [["border-bottom", "2px solid lightgray"]
+                        , ["width", "100px"]
+                        , ["padding", "5px 10px"]] 
+                        [["id", id]] 
+                    [ Html.div [] [] [title]
+                    , Html.script [] [] 
+                        ["document.getElementById('" ++ id ++ "').addEventListener(
+                            'click', (ev)=>{
+                                " ++ onclick ++ "
+                            }
+                        )"]]"""),
+
+        ( "ColorChooser"
+        , "new ColorChooser([title, hint, id, destid, destattr])"
+        , """Html.div   [ ["height", "150px"]
+                        , ["width", "200px"]
+                        , ["margin", "auto auto auto auto"]
+                        , ["border-style", "solid"]
+                        , ["border-width", "medium"]
+                        , ["border-color", "rgb(85, 154, 243)"]
+                        , ["position", "relative"]
+                        , ["background-color", "rgb(214, 214, 214)"]] 
+                        [ ["id", id]
+                        , ["hidden", ""]]
+                        [ Html.div  [ ["background-color", "rgb(85, 154, 243)"]
+                                    , ["height", "25px"]] 
+                                    [] 
+                                    [title]
+                        , Html.div [] [["id", id ++ "hint"]] [hint]
+                        , Html.input [] [["type", "color"], ["id", id ++ "color"]] []
+                        , Html.button [] [["id", id ++ "btn"]] ["Ok"]
+                        , Html.script [] [] 
+                            ["document.getElementById('" ++ id ++ "btn').addEventListener(
+                                'click', function(){
+                                    document.getElementById('" ++ destid ++ "').style." ++ destattr ++ " = 
+                                        document.getElementById('" ++ id ++ "color').value;
+                                    document.getElementById('" ++ id ++ "').setAttribute('hidden', true);
+                                }
+                            )"]]""")
+
+        ( "JDialog"
+        , "new JDialog([title, hint, id])"
+        , """Html.div   [ ["height", "150px"]
+                        , ["width", "200px"]
+                        , ["margin", "auto auto auto auto"]
+                        , ["border-style", "solid"]
+                        , ["border-width", "medium"]
+                        , ["border-color", "rgb(85, 154, 243)"]
+                        , ["position", "relative"]
+                        , ["background-color", "rgb(214, 214, 214)"]] 
+                        [ ["id", id]
+                        , ["hidden", ""]]
+                        [ Html.div  [ ["background-color", "rgb(85, 154, 243)"]
+                                    , ["height", "25px"]] 
+                                    [] 
+                                    [title]
+                        , Html.div [] [["id", id ++ "hint"]] [hint]
+                        , Html.button [] [["id", id ++ "btn"]] ["Ok"]
+                        , Html.script [] [] 
+                            ["document.getElementById('" ++ id ++ "btn').addEventListener(
+                                    'click', function(){
+                                        document.getElementById('" ++ id ++ "').setAttribute('hidden', true);
+                                    }
+                            )"]]"""),
+        
+        ( "JFrame"
+        , "new JFrame([height, width, title, members, containers])"
+        , """Html.div   [ ["height", height]
+                        , ["width", width]
+                        , ["margin", "auto"]
+                        , ["border-style", "solid"]
+                        , ["border-width", "medium"]
+                        , ["border-color", "rgb(85, 154, 243)"]
+                        , ["position", "relative"]
+                        , ["background-color", "rgb(214, 214, 214)"]] 
+                        [] 
+                        [ Html.div  [ ["background-color", "rgb(85, 154, 243)"]
+                                    , ["height", "25px"]] 
+                                    [] 
+                                    [title]
+                        , Html.div [] [] members
+                        , Html.div [] [] containers]"""),
+        
+        ( "JTextArea"
+        , "new JTextArea([left, top, width, height, bgcolor, textcolor, id, text])"
+        , """Html.div   [ ["margin", left ++  " auto " ++ top ++ " auto"]
+                        , ["width", width]
+                        , ["height", height]
+                        , ["background-color", bgcolor]
+                        , ["color", textcolor]
+                        , ["text-align", "left"]]
+                        [["id", id]]
+                        [text]"""),
+
+        ( "JMenuItem"
+        , "new JMenuItem([title])"
+        , """Html.div [["border-bottom", "2px solid lightgray"]
+                        , ["width", "100px"]
+                        , ["padding", "5px 10px"]] [] 
+                    [title]"""),
+        
+        ( "JMenu"
+        , "new JMenu([title, id, items])"
+        , """Html.div [] [] 
+            [ Html.div [] [["id", id]] 
+                [ Html.span [] [] [title]
+                , Html.objectlist [] [["id", "List-1"]]
+                    [Html.div [] [["id", id ++ "items"]] items]
+                ]
+            , Html.style [] [] 
+                ["#" ++ id ++ " {
+                    width: 100px;
+                    cursor: pointer;
+                    padding: 5px 10px;
+                    position: relative;
+                    border-radius: 2.5px;
+                    display: inline-block;
+                    background-color: white;
+                    border-bottom: 2px solid lightgray;
+                }
+                #" ++ id ++ "items {
+                    z-index: 99;
+                    width: 120px;
+                    display: none;
+                    cursor: pointer;
+                    position: absolute;
+                    border-radius: 4px;
+                    background-color: white;
+                    border-top: 2px solid lightgray;
+                    border-left: 2px solid lightgray;
+                    border-right: 2px solid lightgray;
+                }
+                #" ++ id ++ ":hover #" ++ id ++ "items {
+                    display:block;
+                }"]
+            ]"""),
+
+        ( "JMenuBar"
+        , "new JMenuBar([menu])"
+        , """Html.div [["display", "flex"]] [] menu""")

@@ -1,0 +1,188 @@
+Class JComponent Extends Object {}
+
+Class Container Extends Object {}
+
+Class JFrame Extends Container {
+    height:String, 
+    width:String, 
+    title:Ref<String>, 
+    members:Ref<List<JComponent>>, 
+    containers:Ref<List<Container>>;
+
+    setMembers(members){
+        this.members:=members
+    };
+    setContainers(members){
+        this.containers:=members
+    };
+    setTitle(title){
+        this.title:=title ++ "..?"
+    };
+}
+
+Class MyTd Extends Object{
+    color: Ref<String>, content: String;
+    setColor(color){
+        this.color:=color
+    };
+}
+
+Class MyTr Extends Object{
+    cols:List<MyTd>;
+}
+
+Class MyTh Extends MyTd{}
+
+Class MyTable Extends JComponent{
+    color: Ref<String>, 
+    rows: List<MyTr>;
+
+    setColor(color){
+        this.color:=color
+    };
+}
+
+Class Folder Extends JComponent {
+    bgcolor:Ref<String>, 
+    textcolor:String, 
+    left:String, 
+    height:String, 
+    width:String, 
+    name:String;
+
+    setBgColor(c){
+        this.bgcolor := c
+    };
+}
+
+Class MyFileExplorer Extends JFrame {
+    folders:List<Folder>, 
+    files:MyTable;
+}
+
+headerContent = [ "File Name"
+                , "SIZE(in Bytes)"
+                , "Read Only"
+                , "Hidden"];;
+
+fileInfos =
+    [ ["oop-index.html"
+    ,  "1.3MB", "No", "No"]
+    , ["test.txt"
+    ,  "12KB", "Yes", "No"]];;
+
+color = ref "";;
+
+drawHeader x = 
+    new MyTh([color, x]);;
+
+headerRow = 
+    map_ "" drawHeader headerContent;;
+
+header = new MyTr([headerRow]);;
+
+drawColsInRow row =
+    map_ "" 
+        (\x => 
+            (new MyTd([color, x]))) 
+    row;;
+
+drawRow row =
+    new MyTr([drawColsInRow row]);;
+
+stateRow =
+    map_ ["", "", "", ""] drawRow fileInfos;;
+
+table = 
+    new MyTable([color, ([header] ++ stateRow)]);;
+
+curFolder = 
+    new Folder([ref "", "white", "20px", "30px", "80px", "test"]);;
+
+otherFolders = ["src", "lib", "build"];;
+
+folders = curFolder :: 
+            (map_ ""
+                (\n => 
+                    new Folder([ref "white", "black", "20px", "30px", "80px", n])) 
+            otherFolders);;
+
+fileExplorer = 
+    new MyFileExplorer(["426px", "700px"
+                    , ref "File Explorer"
+                    , ref []
+                    , ref []
+                    , folders
+                    , table]);;
+
+main =  ((table->setColor) "lightgrey");
+        ((curFolder->setBgColor) "blue");
+        ((fileExplorer->setTitle) "File Explorer");
+        fileExplorer;;
+-----------------------------------------------------------
+        ( "MyTd"
+        , "new MyTd([color, content])"
+        , """Html.div   [ ["border-bottom", "1px solid blue"]
+                        , ["border-right", "1px solid blue"]
+                        , ["background-color", color]
+                        , ["width", "149px"]
+                        ] 
+                        [] 
+                        [content]"""),
+
+        ( "MyTr"
+        , "new MyTr([cols])"
+        , """Html.div [["display", "flex"]] [] cols"""),
+
+        ( "MyTh"
+        , "new MyTh([color, content])"
+        , """Html.div   [ ["border-bottom", "1px solid blue"]
+                        , ["border-right", "1px solid blue"]
+                        , ["background-color", color]
+                        , ["width", "149px"]
+                        , ["font-weight", "bold"]
+                        ] 
+                        [] 
+                        [content]"""),
+
+        ( "MyTable"
+        , "new MyTable([color, rows])"
+        , """Html.div   [ ["border", "1px solid black"]
+                        , ["background-color", "white"]
+                        , ["height", "400px"]
+                        , ["width", "600px"]] 
+                        []
+                        rows"""),
+
+        ( "Folder"
+        , "new Folder([bgcolor, textcolor, left, height, width, name])"
+        , """Html.div   [ ["background-color", bgcolor]
+                        , ["margin-left", left]
+                        , ["height", height]
+                        , ["width", width]
+                        , ["color", textcolor]
+                        , ["text-align", "left"]] 
+                        []
+                        [name]"""),
+
+        ( "MyFileExplorer"
+        , "new MyFileExplorer([height, width, title, members, containers, folders, files])"
+        , """Html.div   [ ["height", height]
+                        , ["width", width]
+                        , ["margin", "auto auto auto auto"]
+                        , ["border-style", "solid"]
+                        , ["border-width", "medium"]
+                        , ["border-color", "rgb(85, 154, 243)"]
+                        , ["position", "relative"]
+                        , ["background-color", "rgb(214, 214, 214)"]] 
+                        [] 
+                        [ Html.div  [ ["background-color", "rgb(85, 154, 243)"]
+                                    , ["height", "25px"]] 
+                                    []
+                                    [title]
+                        , Html.div [["display", "flex"]] [] 
+                                    [ Html.div [["width", "100px"]
+                                                , ["background-color", "white"]] 
+                                                [] 
+                                                folders
+                                    , files]]""")

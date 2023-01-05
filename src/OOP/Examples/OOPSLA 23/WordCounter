@@ -1,0 +1,274 @@
+Class JComponent Extends Object {}
+
+Class Container Extends Object {}
+
+Class JFrame Extends Container {
+    height:String,
+    width:String,
+    title:Ref<String>,
+    members:Ref<List<JComponent>>,
+    containers:Ref<List<Container>>;
+
+    setMembers(members){
+        this.members:=members
+    };
+    setContainers(members){
+        this.containers:=members
+    };
+    setTitle(title){
+        this.title:=title ++ "..?"
+    };
+}
+
+Class JLabel Extends JComponent {
+    height:String, 
+    width:String, 
+    bgcolor:String, 
+    left:String, 
+    top: String, 
+    text:Ref<String>;
+
+    setText(text){
+        this.text:=text++"..."
+    };
+}
+
+Class AbstractButton Extends JComponent {
+    left:String, 
+    top:String, 
+    height:String, 
+    width:String;
+}
+
+Class JButton Extends AbstractButton {
+    hint:Ref<String>, 
+    id:String, 
+    onclick:String;
+
+    setHint(hint){
+        this.hint:=hint++"->"
+    };
+}
+
+Class JDialog Extends Container {
+    title:Ref<String>, 
+    hint:String, 
+    id:String;
+
+    setTitle(title){
+        this.title:=title ++ ">>>"
+    };
+}
+
+Class JTextComponent Extends JComponent {}
+
+Class JTextArea Extends JTextComponent {
+    left:String, 
+    top:String, 
+    width:String, 
+    height:String, 
+    bgcolor:Ref<String>, 
+    textcolor:Ref<String>, 
+    id:String, 
+    text:Ref<String>;
+
+    setText(text){
+        this.text:=text++"***"
+    };
+}
+
+Class MyLabel Extends JLabel {
+    id:String, 
+    content:String;
+}
+
+Class WordCounter Extends JFrame {
+    lb1:MyLabel, 
+    lb2:MyLabel, 
+    ta:JTextArea, 
+    btns:List<JButton>;
+}
+
+Class ColorChooser Extends JDialog {
+    destid:String;
+}
+
+sentence = "Hi, this is a bi-programming tool.";;
+
+tColor = "white";;
+bgColor = "rgb(163, 28, 28)";;
+
+charCount =
+    letrec count =
+        \str =>
+            case str of
+                c : s => 
+                    if c == ' ' then 
+                        count s
+                    else 
+                        1 + (count s)
+                | "" => 0
+    in (count sentence);;
+
+wordCount =
+    letrec count =
+        \str =>
+            \spc =>
+                case str of
+                    "" => 0
+                    | c : s =>
+                        if c == ' ' then 
+                            count s true
+                        else if 
+                            spc then 1 + (count s false)
+                        else 
+                            count s false
+    in (count sentence true);;
+
+lb1 = new MyLabel(["10px", "200px"
+                , "rgb(214, 214, 214)"
+                ,  "50px", "20px"
+                ,  ref "Characters:"
+                ,  "character"
+                ,  " "]);;
+
+lb2 = new MyLabel(["10px", "200px"
+                ,  "rgb(214, 214, 214)"
+                ,  "50px", "20px"
+                ,  ref "Words:"
+                ,  "word", " "]);;
+
+padColor = new ColorChooser(["Choose Color"
+                            , "choose a color as pad's background"
+                            , "pad", "ta", "backgroundColor"]);;
+
+textColor = new ColorChooser(["Choose Color"
+                            , "choose a color as pad's text color"
+                            , "text", "ta", "color"]);;
+
+ta = new JTextArea(["50px", "20px", "400px", "250px", ref bgColor
+                    , ref tColor, "ta", ref sentence]);;
+
+runScript = "document.getElementById('character').innerHTML='" 
+            ++ (toString charCount) 
+            ++ "';document.getElementById('word').innerHTML='" 
+            ++ (toString wordCount) 
+            ++ "';";;
+
+b = new JButton([ "50px", "20px", "30px", "100px", ref "click"
+                , "run", runScript]);;
+
+pad = new JButton(["200px", "20px", "30px", "100px", ref "pad color"
+                    , "paddialogbtn"
+                    , "document.getElementById('pad').removeAttribute('hidden');"]);;
+
+text = new JButton(["350px", "20px", "30px", "100px", ref "text color"
+                    , "textdialogbtn"
+                    , "document.getElementById('text').removeAttribute('hidden');"]);;
+
+wordCounter = new WordCounter(["450px", "500px"
+                            ,  ref "Char Word Count Tool"
+                            ,  ref []
+                            ,  ref [padColor, textColor]
+                            ,  lb1, lb2
+                            ,  ta
+                            ,  [b, pad, text]]);;
+
+main = (wordCounter->setTitle) "char word count tool";
+        (b->setHint) "Click";
+        (pad->setHint) "Pad color";
+        (text->setHint) "Text color";
+        wordCounter;;
+-----------------------------------------------------
+        ( "JButton"
+        , "new JButton([left, top, height, width, hint, id, onclick])"
+        , """Html.div   [ ["margin-left", left]
+                        , ["margin-right", "auto"]
+                        , ["margin-top", top]
+                        , ["margin-bottom", "auto"]
+                        , ["position", "absolute"]]
+                        []
+                        [ Html.button [["height", height], 
+                                    ["width", width]] 
+                                    [["id", id], 
+                                    ["onclick", onclick]] 
+                                    [hint]]
+                        """),
+
+        ( "JTextArea"
+        , "new JTextArea([left, top, width, height, bgcolor, textcolor, id, text])"
+        , """Html.div   [ ["margin", left ++  " auto " ++ top ++ " auto"]
+                        , ["width", width]
+                        , ["height", height]
+                        , ["background-color", bgcolor]
+                        , ["color", textcolor]
+                        , ["text-align", "left"]]
+                        [["id", id]]
+                        [text]"""),
+        
+        ( "MyLabel"
+        , "new MyLabel([height, width, bgcolor, left, top, text, id, content])"
+        , """Html.div   [ ["height", height]
+                        , ["width", width]
+                        , ["background-color", bgcolor]
+                        , ["margin-left", left]
+                        , ["margin-right", "auto"]
+                        , ["margin-top", top]
+                        , ["margin-bottom", "auto"]
+                        , ["display", "flex"]]
+                        []
+                        [ Html.div [["text-align", "left"]] [] [text]
+                        , Html.div [["text-align", "left"]] [["id", id]] [content]]"""),
+
+
+        ( "WordCounter"
+        , "new WordCounter([height, width, title, members, containers, lb1, lb2, ta, btns])"
+        , """Html.div   [ ["height", height]
+                        , ["width", width]
+                        , ["margin", "auto auto auto auto"]
+                        , ["border-style", "solid"]
+                        , ["border-width", "medium"]
+                        , ["border-color", "rgb(85, 154, 243)"]
+                        , ["position", "relative"]
+                        , ["background-color", "rgb(214, 214, 214)"]] 
+                        [] 
+                        [ Html.div  [ ["background-color", "rgb(85, 154, 243)"]
+                                    , ["height", "25px"]] 
+                                    [] 
+                                    [title]
+                        , Html.div [] []    [ lb1, lb2, ta
+                                            , Html.div [["position", "relative"]] [] btns]
+                        , Html.div [] [] containers]"""),
+        
+        ( "ColorChooser"
+        , "new ColorChooser([title, hint, id, destid, destattr])"
+        , """Html.div   [ ["height", "150px"]
+                        , ["width", "200px"]
+                        , ["margin", "auto auto auto auto"]
+                        , ["border-style", "solid"]
+                        , ["border-width", "medium"]
+                        , ["border-color", "rgb(85, 154, 243)"]
+                        , ["position", "relative"]
+                        , ["background-color", "rgb(214, 214, 214)"]] 
+                        [ ["id", id]
+                        , ["hidden", ""]]
+                        [ Html.div  [ ["background-color", "rgb(85, 154, 243)"]
+                                    , ["height", "25px"]] 
+                                    [] 
+                                    [title]
+                        , Html.div [] [["id", id ++ "hint"]] [hint]
+                        , Html.input [] [["type", "color"], ["id", id ++ "color"]] []
+                        , Html.button [] [["id", id ++ "btn"]] ["Ok"]
+                        , Html.script [] [] ["document.getElementById('" ++ id 
+                            ++ "btn').addEventListener('click', function(){"
+                            ++ "document.getElementById('" 
+                            ++ destid 
+                            ++ "').style."
+                            ++ destattr 
+                            ++ " = document.getElementById('" 
+                            ++ id 
+                            ++ "color').value;"
+                            ++ "document.getElementById('" 
+                            ++ id 
+                            ++ "').setAttribute('hidden', true);})"
+                        ]]""")

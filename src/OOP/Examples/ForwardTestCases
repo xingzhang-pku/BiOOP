@@ -1,0 +1,56 @@
+# Test Case 1
+Class A Extends B {a,b;m(c){c};}
+Class B Extends Object {d,e;m1(a){this.d+a} m2(b){b-1};}
+End
+
+# (1) √
+[1, 1.1, true, false, 'c', "love", ""]
+# (2) √
+let a = 1 in a + 2
+# （3）√
+letrec fac =
+    \n => case n of
+        1 => 1
+        | x => x * (fac (x-1))
+in fac 3
+# (4) √
+1::[]
+# (5) √
+(1,2)
+# (6) √
+(1,2,3)
+# (7) √
+[1+1,1-1,3*3,4/3,4//3,1==1,2>3,3<4,4>=5,5<=6]
+# (8) √
+[1+1.2,1-1.5,3*3.3,4/3.0]
+# (9) √
+[1.2+1,1.5-1,3.3*3,4.0/3]
+# (10）√
+[1.1+1.3, 1.3-1.4, 1.3*1.4, 4.2/0.7]
+# (11) √
+[true && true, true || true, true && false, true || false, false && true, false || true, false && false, false || false]
+# (12) √
+[[1]++[2],[1]++[],[]++[1],[]++[]]
+# (13) √
+[-3, ~true]
+# (14) √
+(1+1)
+# (15) √
+ref 3
+# (16) √
+let a = ref 3 in !a
+# (17) √
+let a = ref 3 in 
+let b = (a:=4) in
+[!a,b]
+# (18) √
+unit
+# (19) √
+let a = new A([1,2,3,4]) in
+[a.e, a.b]
+# (20)
+let a = new A([1,2,3,4]) in
+(a->m1) 2
+# (21)
+let a = ref 1 in
+a:=3;!a

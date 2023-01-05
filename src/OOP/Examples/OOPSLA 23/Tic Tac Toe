@@ -1,0 +1,287 @@
+Class JComponent Extends Object {}
+
+Class Container Extends Object {}
+
+Class JFrame Extends Container {
+    height:String,
+    width:String, 
+    title:Ref<String>, 
+    members:Ref<List<JComponent>>, 
+    containers:Ref<List<Container>>;
+
+    setMembers(members){
+        this.members:=members
+    };
+    setContainers(members){
+        this.containers:=members
+    };
+    setTitle(title){
+        this.title:=title ++ "..?"
+    };
+}
+
+Class JLabel Extends JComponent {
+    height:String, 
+    width:String, 
+    bgcolor:String, 
+    left:String, 
+    top: String, 
+    text:Ref<String>;
+
+    setText(text){
+        this.text:=text++"..."
+    };
+}
+
+Class AbstractButton Extends JComponent {
+    left:String, 
+    top:String, 
+    height:String, 
+    width:String;
+}
+
+Class JButton Extends AbstractButton {
+    hint:Ref<String>, 
+    id:String, 
+    onclick:String;
+
+    setHint(hint){
+        this.hint:=hint++"---"
+    };
+}
+
+Class JDialog Extends Container {
+    title:Ref<String>, 
+    hint:String, 
+    id:String;
+
+    setTitle(title){
+        this.title:=title ++ ">>>"
+    };
+}
+
+Class TTTBtn Extends AbstractButton {
+    hint:String, 
+    id:String, 
+    onclick:String, 
+    tag:String, 
+    bg:String;
+}
+
+win = [[1, 2, 3]
+    ,  [1, 4, 7]
+    ,  [1, 5, 9]
+    ,  [2, 5, 8]
+    ,  [3, 5, 7]
+    ,  [3, 6, 9]
+    ,  [4, 5, 6]
+    ,  [7, 8, 9]];;
+
+getIndexArray =
+    letrec getArray =
+        \length =>
+            if length == 0 then 
+                []
+            else
+                (getArray (length - 1)) ++ [length]
+    in getArray;;
+    
+checkLogic = 
+    letrec check =
+        \i =>
+            \tag =>
+                \cond =>
+                    case cond of
+                        [] => ""
+                        | [a, b, c] :: cs =>
+                            if ((a == i) || (b == i) || (c == i)) then 
+                                "if((document.getElementById('b" 
+                                ++ (toString a) 
+                                ++ "').getAttribute('tag') == document.getElementById('b" 
+                                ++ (toString b) 
+                                ++ "').getAttribute('tag')) && (document.getElementById('b" 
+                                ++ (toString c) 
+                                ++ "').getAttribute('tag') == document.getElementById('b" 
+                                ++ (toString b) 
+                                ++ "').getAttribute('tag'))){"
+                                ++ "document.getElementById('dialoghint').innerHTML='"
+                                ++ tag 
+                                ++ " win!';document.getElementById('dialog').removeAttribute('hidden');}"
+                                ++ (check i tag cs)
+                            else 
+                                (check i tag cs)
+    in check;;
+
+pcLogic = 
+    letrec getScript =
+        \i =>
+            if (i == 9) then 
+                "if(document.getElementById('b9').getAttribute('tag') == '0')"
+                ++ "{document.getElementById('b9').style.background = 'url(./pic/ic2.jpg)';"
+                ++ "document.getElementById('b9').setAttribute('tag', '2');" 
+                ++ (checkLogic 9 "Computer" win) 
+                ++ "}"
+            else 
+                "if(document.getElementById('b" 
+                ++ (toString i) 
+                ++ "').getAttribute('tag') == '0')"
+                ++ "{document.getElementById('b" 
+                ++ (toString i) 
+                ++ "').style.background = 'url(./pic/ic2.jpg)';"
+                ++ "document.getElementById('b" 
+                ++ (toString i) 
+                ++ "').setAttribute('tag', '2');" 
+                ++ (checkLogic i "Computer" win) 
+                ++ "}else " 
+                ++ (getScript (i + 1))
+    in (getScript 1);;
+    
+btns =
+    let 
+        l =
+            \i => ((i - 1) - 3 * ((i - 1) // 3)) * 105 + 10 
+    in
+    let 
+        t = 
+            \i => ((i - 1) // 3) * 105 + 70 
+    in
+    map_ 0
+        (\i => 
+            (new TTTBtn([((toString (l i)) ++ "px")
+                            , ((toString (t i)) ++ "px")
+                            , "100px"
+                            , "100px"
+                            , " "
+                            , "b" ++ (toString i)
+                            , "if(document.getElementById('b" 
+                                ++ (toString i) 
+                                ++ "').getAttribute('tag') == '0') {"
+                                ++ "document.getElementById('b" 
+                                ++ (toString i) 
+                                ++ "').style.background = 'url(./pic/ic1.jpg)';"
+                                ++ "document.getElementById('b" 
+                                ++ (toString i) 
+                                ++ "').setAttribute('tag', '1');"
+                                ++ pcLogic 
+                                ++ (checkLogic i "You" win) 
+                                ++ "}"
+                            , "0"
+                            , " "])))
+    (getIndexArray 9);;
+
+resetScript =
+    letrec getScript =
+        \i =>
+            if (i <= 9) then 
+                    "document.getElementById('b" 
+                ++  (toString i) 
+                ++  "').setAttribute('tag', '0');"
+                ++  "document.getElementById('b" 
+                ++  (toString i) 
+                ++  "').style.background = '';" 
+                ++  (getScript (i + 1))
+            else ""
+    in (getScript 1);;
+
+reset = new JButton(["350px", "300px", 
+                    "30px", "100px", 
+                    ref "Reset", 
+                    "reset", 
+                    resetScript]);;
+
+label = new JLabel(["30px", "400px", 
+                    "rgb(214,214,214)",
+                    "10px", "10px", 
+                    ref " "]);;
+
+dialog = new JDialog([ref "Result", " ", "dialog"]);;
+
+TTT = new JFrame(["500px", "500px"
+                , ref "Tic Tac Toe"
+                , ref ([reset, label] ++ btns)
+                , ref [dialog]]);;
+
+main =  (TTT->setTitle) "Tic Tac Toe";(reset->setHint) "Reset";
+        (label->setText) "click a button to put a pawn, and the computer will put another one automatically.";
+        TTT;;
+---------------------------------------------------
+        ( "JFrame"
+        , "new JFrame([height, width, title, members, containers])"
+        , """Html.div   [ ["height", height]
+                        , ["width", width]
+                        , ["margin", "auto"]
+                        , ["border-style", "solid"]
+                        , ["border-width", "medium"]
+                        , ["border-color", "rgb(85, 154, 243)"]
+                        , ["position", "relative"]
+                        , ["background-color", "rgb(214, 214, 214)"]] 
+                        [] 
+                        [ Html.div  [ ["background-color", "rgb(85, 154, 243)"]
+                                    , ["height", "25px"]] 
+                                    [] 
+                                    [title]
+                        , Html.div [] [] members
+                        , Html.div [] [] containers]"""),
+
+        ( "JLabel"
+        , "new JLabel([height, width, bgcolor, left, top, text])"
+        , """Html.div   [ ["height", height]
+                        , ["width", width]
+                        , ["background-color", bgcolor]
+                        , ["margin-left", left]
+                        , ["margin-right", "auto"]
+                        , ["margin-top", top]
+                        , ["margin-bottom", "auto"]
+                        , ["text-align", "left"]]
+                        []
+                        [text]"""),
+
+        ( "JButton"
+        , "new JButton([left, top, height, width, hint, id, onclick])"
+        , """Html.div   [ ["margin-left", left]
+                        , ["margin-right", "auto"]
+                        , ["margin-top", top]
+                        , ["margin-bottom", "auto"]
+                        , ["position", "absolute"]]
+                        []
+                        [ Html.button [["height", height]
+                        , ["width", width]] [["id", id], ["onclick", onclick]] [hint]]
+                        """),
+        
+        ( "JDialog"
+        , "new JDialog([title, hint, id])"
+        , """Html.div   [ ["height", "150px"]
+                        , ["width", "200px"]
+                        , ["margin", "auto auto auto auto"]
+                        , ["border-style", "solid"]
+                        , ["border-width", "medium"]
+                        , ["border-color", "rgb(85, 154, 243)"]
+                        , ["position", "relative"]
+                        , ["background-color", "rgb(214, 214, 214)"]] 
+                        [ ["id", id]
+                        , ["hidden", ""]]
+                        [ Html.div  [ ["background-color", "rgb(85, 154, 243)"]
+                                    , ["height", "25px"]] 
+                                    [] 
+                                    [title]
+                        , Html.div [] [["id", id ++ "hint"]] [hint]
+                        , Html.button [] [["id", id ++ "btn"]] ["Ok"]
+                        , Html.script [] [] ["document.getElementById('" 
+                            ++ id ++ "btn').addEventListener('click', function(){"
+                            ++ "document.getElementById('" ++ id ++ "').setAttribute('hidden', true);})"
+                            ]]"""),
+
+        ( "TTTBtn"
+        , "new TTTBtn([left, top, height, width, hint, id, onclick, tag, bg])"
+        , """Html.div   [ ["margin-left", left]
+                        , ["margin-right", "auto"]
+                        , ["margin-top", top]
+                        , ["margin-bottom", "auto"]
+                        , ["position", "absolute"]
+                        , ["background", bg]]
+                        []
+                        [ Html.button   [ ["height", height]
+                                        , ["width", width]] 
+                                        [ ["id", id]
+                                        , ["tag", tag]
+                                        , ["onclick", onclick]] []]""")

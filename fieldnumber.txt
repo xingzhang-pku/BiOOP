@@ -1,0 +1,12 @@
+
+fileExplorer   60
+sourceGetter   29
+ipFinder       24
+puzzle         77
+picPuzzle      101
+onlineTest     196
+wordCounter    64
+TTT            102
+notepad        87
+calculator     204
+datasync       478

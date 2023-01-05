@@ -1,0 +1,246 @@
+Class JComponent Extends Object {}
+
+Class Container Extends Object {}
+
+Class JFrame Extends Container {
+    height:String, 
+    width:String, 
+    title:Ref<String>, 
+    members:Ref<List<JComponent>>, 
+    containers:Ref<List<Container>>;
+
+    setMembers(members){
+        this.members:=members
+    };
+    setContainers(members){
+        this.containers:=members
+    };
+    setTitle(title){
+        this.title:=title ++ "..?"
+    };
+}
+
+Class AbstractButton Extends JComponent {
+    left:String, 
+    top:String, 
+    height:String, 
+    width:String;
+}
+
+Class JButton Extends AbstractButton {
+    hint:Ref<String>, 
+    id:String, 
+    onclick:String;
+
+    setHint(hint){
+        this.hint:=hint++"->"
+    };
+}
+
+Class JDialog Extends Container {
+    title:Ref<String>, 
+    hint:String, 
+    id:String;
+
+    setTitle(title){
+        this.title:=title ++ ">>>"
+    };
+}
+
+Class JToggleButton Extends AbstractButton {}
+
+Class JRadioButton Extends JToggleButton {
+    name:String, 
+    hint:Ref<String>, 
+    value:String;
+
+    setHint(hint){
+        this.hint:=hint++"---"
+    };
+}
+
+Class MyQuestion Extends JComponent {
+    question:String, 
+    options:List<JRadioButton>, 
+    name:String, 
+    answer:String, 
+    hidden:String;
+}
+
+Class OnlineTest Extends JFrame {
+    questions:List<MyQuestion>, 
+    next:JButton, 
+    check:JButton, 
+    hidden:String;
+}
+
+data =  [ 
+            [ "Que1: Which one among these is not a primitive datatype?"
+            , ["int", "Float", "boolean", "char"], 1],
+            [ "Que2: Which class is available to all the class automatically?"
+            , ["Swing", "Applet", "Object", "ActionEvent"], 2], 
+            [ "Que3: Which package is directly available to our class without importing it?"
+            , ["swing", "applet", "net", "lang"], 3], 
+            [ "Que4: String class is defined in which package?"
+            , ["lang", "Swing", "Applet", "awt"], 0], 
+            [ "Que5: Which institute is best for java coaching?"
+            , ["Utek", "Aptech", "SSS IT", "jtek"], 2], 
+            [ "Que6: Which one among these is not a keyword?"
+            , ["class", "int", "get", "if"], 2], 
+            [ "Que7: Which one among these is not a class?"
+            , ["Swing", "Actionperformed", "ActionEvent", "Button"], 1], 
+            [ "Que8: which one among these is not a function of Object class?"
+            , ["toString", "finalize", "equals", "getDocumentBase"], 3], 
+            [ "Que9: which function is not present in Applet class?"
+            , ["init", "main", "start", "destroy"], 1], 
+            [ "Que10: Which one among these is not a valid component?"
+            , ["init", "main", "start", "destroy"], 2]
+        ];;
+
+getAns =
+    letrec getAns_ =
+        \ops =>
+            \idx =>
+                \ans =>
+                    case ops of
+                        [] => "No answer"
+                        | o :: os =>
+                            if idx == ans then 
+                                o
+                            else 
+                                getAns_ os (idx + 1) ans
+    in getAns_;;
+
+questions =
+    letrec getQuestions =
+        \i =>
+            \qs =>
+                case qs of
+                    [] => []
+                    | [q, op, ans] :: qs_ =>
+                        let getOptions =
+                            \ops =>
+                                map_ ""
+                                    (\o => 
+                                        (new JRadioButton([("q" ++ (toString i)), o, o]))) 
+                                ops
+                        in
+                        (new MyQuestion([ q
+                                        , (getOptions op)
+                                        , ("q" ++ (toString i))
+                                        , (getAns op 0 ans)
+                                        , "hidden"])) 
+                        ::(getQuestions (i + 1) qs_)
+    in
+    getQuestions 0 data;;
+
+nextbtn = new JButton(["100px", "10px", "30px", "60px", ref "next", "next"
+                        , "if(cur < 9){cur += 1;"
+                        ++ "document.getElementById('q' + cur).style.visibility='visible';}"
+                        ++ "if(cur==9){document.getElementById('checkbtn').style.visibility='visible';}"]);;
+
+checkbtn = new JButton([  "300px", "10px"
+                        , "30px", "60px"
+                        , ref "check", "check"
+                        , "count = 0;" 
+                        ++ "for(i = 0;i < 10;i++)" 
+                        ++ "{ans = document.getElementById('q' + i).getAttribute('answer');" 
+                        ++ "count += document.getElementById('q' + i + ans).checked;}" 
+                        ++ "dialog = document.getElementById('dialog');"
+                        ++ "document.getElementById('dialoghint').innerHTML = 'Your score is ' + count;"
+                        ++ "dialog.removeAttribute('hidden');"]);;
+
+scoreDialog = new JDialog([ref "Your Score", " ", "dialog"]);;
+
+onlineTest =
+    new OnlineTest([  "640px", "500px"
+                    , ref "online exam"
+                    , ref []
+                    , ref [scoreDialog]
+                    , questions
+                    , nextbtn
+                    , checkbtn
+                    , "hidden"]);;
+
+main = (onlineTest->setTitle) "Online Exam";
+        onlineTest;;
+---------------------------------------------
+        ( "MyQuestion"
+        , "new MyQuestion([question, options, name, answer, hidden])"
+        , """Html.div   [["margin-top", "10px"]
+                        , ["visibility", hidden]] 
+                        [ ["id", name]
+                        , ["answer", answer]] 
+                        [ Html.div [] [] [question]
+                        , Html.div [["display", "flex"]] [] options]"""),
+        
+        ( "OnlineTest"
+        , "new OnlineTest([height, width, title, members, containers, questions, next, check, hidden])"
+        , """Html.div   [ ["height", height]
+                        , ["width", width]
+                        , ["margin", "auto auto auto auto"]
+                        , ["border-style", "solid"]
+                        , ["border-width", "medium"]
+                        , ["border-color", "rgb(85, 154, 243)"]
+                        , ["position", "relative"]
+                        , ["background-color", "rgb(214, 214, 214)"]] 
+                        [] 
+                        [ Html.script [] [] 
+                            ["cur = 0;document.getElementById('q0').style.visibility='visible';"]
+                        , Html.div  [ ["background-color", "rgb(85, 154, 243)"]
+                                    , ["height", "25px"]] 
+                                    [] 
+                                    [title]
+                        , Html.div [] [] questions
+                        , Html.div [] [] [next]
+                        , Html.div [["visibility", hidden]] [["id", "checkbtn"]] [check]
+                        , Html.div [] [] containers]"""),
+        
+        ( "JDialog"
+        , "new JDialog([title, hint, id])"
+        , """Html.div   [ ["height", "150px"]
+                        , ["width", "200px"]
+                        , ["margin", "auto auto auto auto"]
+                        , ["border-style", "solid"]
+                        , ["border-width", "medium"]
+                        , ["border-color", "rgb(85, 154, 243)"]
+                        , ["position", "relative"]
+                        , ["background-color", "rgb(214, 214, 214)"]] 
+                        [ ["id", id]
+                        , ["hidden", ""]]
+                        [ Html.div  [ ["background-color", "rgb(85, 154, 243)"]
+                                    , ["height", "25px"]] 
+                                    [] 
+                                    [title]
+                        , Html.div [] [["id", id ++ "hint"]] [hint]
+                        , Html.button [] [["id", id ++ "btn"]] ["Ok"]
+                        , Html.script [] [] 
+                            ["document.getElementById('" ++ id ++ "btn').addEventListener(
+                                    'click', function(){
+                                        document.getElementById('" ++ id ++ "').setAttribute('hidden', true);
+                                    }
+                            )"]]"""),
+
+        ( "JButton"
+        , "new JButton([left, top, height, width, hint, id, onclick])"
+        , """Html.div   [ ["margin-left", left]
+                        , ["margin-right", "auto"]
+                        , ["margin-top", top]
+                        , ["margin-bottom", "auto"]
+                        , ["position", "absolute"]]
+                        []
+                        [ Html.button [["height", height],
+                                    ["width", width]] 
+                                    [["id", id], 
+                                    ["onclick", onclick]] 
+                                    [hint]]
+                        """),
+        
+        ( "JRadioButton"
+        , "new JRadioButton([name, hint, value])"
+        , """Html.div [] [] [ Html.input [] [ ["type", "radio"]
+                                            , ["name", name]
+                                            , ["value", value]
+                                            , ["id", name ++ hint]] []
+                            , hint
+                            ]"""),

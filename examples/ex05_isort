@@ -1,0 +1,36 @@
+letrec span =
+    \f =>
+        \ls =>
+            case ls of
+                [] => ([], [])
+                | x :: xs =>
+                    let
+                        (trueSet, falseSet) = span f xs
+                    in
+                    if f x then
+                        (x :: trueSet, falseSet)
+                    else
+                        ([], ls)
+in
+letrec foldr =
+    \f =>
+        \start =>
+            \ls =>
+                case ls of
+                    [] => start
+                    | x :: xs =>
+                        f x (foldr f start xs)
+in
+let insert =
+    \n =>
+        \ms =>
+            let 
+                (xs, ys) = span (\x=>x>n) ms 
+            in
+                _
+in
+let isort =
+    \ls =>
+        foldr insert [] ls
+in
+    isort [4,3,5]

@@ -1,0 +1,16 @@
+(1)
+letrec span =
+    \f =>
+        \ls =>
+            case ls of
+                [] => ([], [])
+                | x :: xs =>
+                    let
+                        (trueSet, falseSet) = span f xs
+                    in
+                    if f x then
+                        (_, falseSet)
+                    else
+                        ([], ls)
+in
+span (\x=>x>2) [3,2,1]

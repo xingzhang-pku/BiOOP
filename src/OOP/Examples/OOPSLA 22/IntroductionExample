@@ -1,0 +1,54 @@
+class MenuItem extends AbstractButton {
+    private String title;
+    public void setTitle(String t) {
+        this.title = t + "...";
+    }
+    ...
+}
+class Menu extends MenuItem {
+    private List<MenuItem> items;
+    ...
+} 
+class MenuBar extends Component {
+    private List<Menu> menus;
+    ...
+}
+public class MenuDemo {
+    public static void main(String[] args){
+        fileMenu = new Menu();
+        fileMenu.setTitle("File(F)");
+        ...
+        color = white;
+        fileMenu.setColor(color);
+        ...
+        color = gray;
+        excelMenuItem.setColor(color);
+        ...
+    }
+}
+
+<div class="dropdown">
+    <button class="dropbtn">File(F)  ></button>
+    <div class="dropdown-content">
+        <a>New File...</a> 
+            ...
+        <a>Open</a>        
+            ...
+        <a>Save</a> 
+            ...
+        <a>Exit</a>
+            ...
+    </div>
+</div>
+<div class="dropdown">
+    <button class="dropbtn">Edit(E)</button>
+    ...
+</div>
+<div class="dropdown">
+    <button class="dropbtn">View(V)</button>
+    ...
+</div>
+<div class="dropdown">
+    <button class="dropbtn">Help(H)</button>
+    ...
+</div>

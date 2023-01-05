@@ -1,0 +1,208 @@
+Class Canva4 Extends Object{
+    shapes: List<Shape>, texts: List<Text>;
+    
+}
+Class Shape Extends Object {
+    bw: String, bh: String, 
+    top: String, left: String, 
+    id: String, color: Ref<String>;
+    setColor(color){
+        this.color:=color
+    };
+}
+
+Class Circle Extends Shape {
+    x: String, y: String, r1: String;
+}
+
+Class Square Extends Circle {}
+
+Class Rect Extends Square {
+    r2: String;
+}
+
+Class Polygon Extends Shape {
+    points: String;
+}
+
+Class Text Extends Object{
+    top: Ref<String>, left: Ref<String>,
+    color: Ref<String>, content: String;
+    setColor(color){
+        this.color:=color
+    };
+    setTop(top){
+        this.top:=top
+    };
+    setLeft(left){
+        this.left:=left
+    };
+}
+
+logoColor = ref "";;
+star = new Polygon( ["80", "80", "100px", "50px"
+                    , "star", logoColor
+                    , "0,40 30,50 40,80 50,50 80,40 50,30 40,0 30,30"]);;
+title1 = new Text([ref "", ref "", logoColor, "Bidirectional"]);;
+title2 = new Text([ref "", ref "", logoColor, "Preview"]);;
+title3 = new Text(  [ ref "185px", ref "20px", logoColor
+                    , "Manipulating Your Objects Directly"]);;
+contentTitle = new Text([ ref "110px", ref "300px", ref ""
+                        , "What can we do:"]);;
+content1 = new Text([ref "130px", ref "320px", ref ""
+                    , "· Modify the type of objects"]);;
+content2 = new Text([ref "150px", ref "320px", ref ""
+                    , "· Duplicate or delete objects"]);;
+content3 = new Text([ref "170px", ref "320px", ref ""
+                    , "· Modify attributes of objects"]);;
+canva=new Canva4([ [star]
+                ,   [ title1
+                    , title2
+                    , title3
+                    , contentTitle
+                    , content1
+                    , content2
+                    , content3]]);;
+main =  (star->setColor) "#F5E162";
+        (title1->setTop) "117px";
+        (title1->setLeft) "150px";
+        (title2->setTop) "143px";
+        (title2->setLeft) "165px";
+        canva;;
+
+-- Template
+        ( "Canva4"
+        , "new Canva4([shapes, texts])"
+        , """Html.div [] [] [ Html.script [] [] [
+                                "function startDrag(event){
+                                    event.dataTransfer.setData('shape', event.target.id);
+                                    event.dataTransfer.setData('startx', event.clientX);
+                                    event.dataTransfer.setData('starty', event.clientY);
+                                };
+                                function allowDrag(event){
+                                    event.preventDefault();
+                                };"
+                            ]
+                            , Html.script [] [] [
+                                "function drop(event){
+                                    event.preventDefault();
+                                    var x = event.clientX - event.dataTransfer.getData('startx');
+                                    var y = event.clientY - event.dataTransfer.getData('starty');
+                                    var target = event.dataTransfer.getData('shape');
+                                    var shape = document.getElementById(target).firstElementChild;
+                                    var left = shape.style.left;
+                                    var top = shape.style.top;
+                                    shape.style.left = parseInt(left.substring(0, left.length-2)) + x;
+                                    shape.style.top = parseInt(top.substring(0, top.length-2)) + y;
+                                };"
+                            ]
+                            , Html.div [] [] texts
+                            , Html.div  [ ["height", "600px"]
+                                        , ["width", "600px"]
+                                        ] 
+                                        [ ["ondragover", "allowDrag(event)"]
+                                        , ["ondrop", "drop(event)"]
+                                        ] 
+                                        shapes
+                            ]"""),
+
+        ( "Circle"
+        , "new Circle([bw, bh, top, left, id, color, x, y, r1])"
+        , """Html.div   [] 
+                        [ ["draggable", "true"]
+                        , ["id", id]
+                        , ["ondragstart", "startDrag(event)"]] 
+                        [ Html.svg  [ ["position", "absolute"]
+                                    , ["top", top]
+                                    , ["left", left]
+                                    ] 
+                                    [ ["width", bw]
+                                    , ["height", bh]
+                                    ] 
+                                    [ Html.circle   [] 
+                                                    [ ["cx", x]
+                                                    , ["cy", y]
+                                                    , ["r", r1]
+                                                    , ["fill", color]
+                                                    ] 
+                                                    []
+                                    ]
+                        ]"""),
+
+        ( "Square"
+        , "new Square([bw, bh, top, left, id, color, x, y, r1])"
+        , """Html.div   [] 
+                        [ ["draggable", "true"]
+                        , ["id", id]
+                        , ["ondragstart", "startDrag(event)"]] 
+                        [ Html.svg  [ ["position", "absolute"]
+                                    , ["top", top]
+                                    , ["left", left]
+                                    ] 
+                                    [ ["width", bw]
+                                    , ["height", bh]
+                                    ] 
+                                    [ Html.rect [] 
+                                                [ ["x", x]
+                                                , ["y", y]
+                                                , ["width", r1]
+                                                , ["height", r1]
+                                                , ["fill", color]
+                                                ] 
+                                                []
+                                    ]
+                        ]"""),
+
+        ( "Rect"
+        , "new Rect([bw, bh, top, left, id, color, x, y, r1, r2])"
+        , """Html.div   [] 
+                        [ ["draggable", "true"]
+                        , ["id", id]
+                        , ["ondragstart", "startDrag(event)"]] 
+                        [ Html.svg  [ ["position", "absolute"]
+                                    , ["top", top]
+                                    , ["left", left]
+                                    ] 
+                                    [ ["width", bw]
+                                    , ["height", bh]
+                                    ] 
+                                    [ Html.rect [] 
+                                                [ ["x", x]
+                                                , ["y", y]
+                                                , ["width", r1]
+                                                , ["height", r2]
+                                                , ["fill", color]
+                                                ] 
+                                                []
+                                    ]
+                        ]"""),
+
+        ( "Polygon"
+        , "new Polygon([bw, bh, top, left, id, color, points])"
+        , """Html.div   [] 
+                        [ ["draggable", "true"]
+                        , ["id", id]
+                        , ["ondragstart", "startDrag(event)"]] 
+                        [ Html.svg  [ ["position", "absolute"]
+                                    , ["top", top]
+                                    , ["left", left]
+                                    ] 
+                                    [ ["width", bw]
+                                    , ["height", bh]
+                                    ] 
+                                    [ Html.polygon  [] 
+                                                    [ ["points", points]
+                                                    , ["fill", color]
+                                                    ] 
+                                                    []
+                                    ]
+                        ]"""),
+
+        ( "Text"
+        , "new Text([top, left, color, content])"
+        , """Html.div   [ ["position", "absolute"]
+                        , ["top", top]
+                        , ["left", left]
+                        , ["color", color]] 
+                        []
+                        [content]""")

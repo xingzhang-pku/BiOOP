@@ -1,0 +1,114 @@
+Class Button1 Extends TextPane{
+    content: String, opID: String, option: String;
+}
+
+Class Keyboard Extends Object{
+    btns: Ref<List<Button1>>;
+    setBtns(btns){
+        this.btns:=btns
+    };
+}
+
+Class DisplayArea1 Extends TextPane{
+    content: String;
+}
+
+Class Calculator Extends Object{
+    components: Ref<List<Object>>;
+    addComponent(item){
+        this.components:=(!this.components)++[item]
+    };
+}
+
+nums = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];;
+ops = ["+", "-", "*", "/"];;
+oprand1 = 1;;
+oprand2 = 1;;
+operator = "+";;
+
+eval op v1 v2 = 
+    case op of
+          "+" => v1 + v2
+        | "-" => v1 - v2
+        | "*" => v1 * v2
+        | "/" => v1 / v2
+;;
+
+buttons1 = map_ "" 
+                (\x => new Button1(  [ "btn1" ++ x
+                                    , x
+                                    , "oprand1"
+                                    , "text.innerHTML + "])) 
+                nums;;
+opButtons = map_ "" 
+                (\x => new Button1(  [ "btnop" ++ x
+                                    , x
+                                    , "oprandOp"
+                                    , ""])) 
+                ops;;
+buttons2 = map_ "" 
+                (\x => new Button1([ "btn2" ++ x
+                                    , x
+                                    , "oprand2"
+                                    , "text.innerHTML + "])) 
+                nums;;
+
+
+oprandArea1 = new DisplayArea1([ "oprand1", 
+                                (toString oprand1)]);;
+opArea = new DisplayArea1([  "oprandOp", 
+                            operator]);;
+oprandArea2 = new DisplayArea1([ "oprand2", 
+                                (toString oprand2)]);;
+
+keyboard1 = new Keyboard([ref []]);;
+opKeyboard = new Keyboard([ref []]);;
+keyboard2 = new Keyboard([ref []]);;
+
+resArea = new DisplayArea1([ "res", 
+                            toString (eval operator oprand1 oprand2)]);;
+
+components = [  oprandArea1, 
+                keyboard1, 
+                opArea, 
+                opKeyboard, 
+                oprandArea2, 
+                keyboard2];;
+
+calculator = new Calculator([ref components]);;
+
+main =  (keyboard1->setBtns) buttons1;
+        (keyboard2->setBtns) buttons2;
+        (opKeyboard->setBtns) opButtons;
+        (calculator->addComponent) resArea;
+        calculator;;
+
+
+-- Template
+
+        ( "Button1"
+        , "new Button1([btnID, content, opID, option])"
+        , """Html.div [] [] [ Html.div  [ ["width", "30px"]
+                                        , ["background-color", "lightgrey"]
+                                        , ["border", "1px solid black"] ] 
+                                        [ ["id", btnID] ] [content]
+                            , Html.script [] [] [  
+                                "document.getElementById('" ++ btnID ++ "').addEventListener(
+                                    'click', function(){" ++ 
+                                        "var text = document.getElementById('" ++ opID ++ "');
+                                        text.innerHTML = " ++ option ++ "'" ++ content ++ "';"
+                                    ++ "}
+                                );"
+                            ]]"""),
+
+        ( "Keyboard"
+        , "new Keyboard([btns])"
+        , """Html.div [["display", "flex"]] [] btns"""),
+
+        ( "DisplayArea1"
+        , "new DisplayArea1([id, content])"
+        , """Html.div [] [["id", id]] [content]"""),
+
+        ( "Calculator"
+        , "new Calculator([components])"
+        , """Html.div [] [] components""")

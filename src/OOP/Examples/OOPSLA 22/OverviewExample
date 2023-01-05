@@ -1,0 +1,131 @@
+Class MenuBar Extends Object {
+    menus:List<Menu>;
+}
+Class MenuItem Extends Object {
+    title: Ref<String>;
+    setTitle(title){
+        this.title:= title ++ "..."
+    };
+}
+Class Menu Extends MenuItem {
+    items:Ref<List<MenuItem>>, id1:String, id2:String;
+}
+mainOptions = 
+    ["Edit (E)", "View (V)", "Help (H)"];;
+mainOptionItems =
+    map_ "" 
+        (\title => 
+            new Menu([ref title, ref [], "ID1", "ID2"])) 
+    mainOptions;;
+saveFile =
+    new Menu([ref "Save", ref [new MenuItem([ref "Save as"])], "s1", "s2"]);;
+openFile =
+    new MenuItem([ref ""]);;
+newFileItems =
+    map_ ""
+        (\title =>
+            new MenuItem([ref title]))
+    ["Word", "PowerPoint"];;
+newFile =
+    new Menu([ref "", ref newFileItems, "new", "newOptions"]);;
+fileMenu = 
+    new Menu([ref "", ref [saveFile, openFile, newFile], "f1", "f2"]);;
+menuBar = new MenuBar([fileMenu :: mainOptionItems]);;
+
+main =  (openFile->setTitle) "Open";
+        (newFile->setTitle) "New File";
+        (fileMenu->setTitle) "File (F)";
+        menuBar;;
+        
+
+
+
+
+Class MenuBar Extends Object {
+    menus:List<Menu>;
+}
+Class MenuItem Extends Object {
+    title: Ref<String>;
+    setTitle(title){
+        this.title:= title ++ "..."
+    };
+}
+Class Menu Extends MenuItem {
+    items:Ref<List<MenuItem>>, id1:String, id2:String;
+    add(item){
+        this.items:=(!this.items) ++ [item]
+    };
+}
+mainOptions = 
+    ["Edit (E)", "View (V)", "Help (H)"];;
+mainOptionItems =
+    map_ "" 
+        (\title => 
+            new Menu([ref title, ref [], "ID1", "ID2"])) 
+    mainOptions;;
+save = 
+    new Menu([ref "Save", ref [new MenuItem(["Save As"])], "save", "saveList"]);;
+fileOptionItems = 
+    [save, new MenuItem(["Open"])];;
+fileMenu = 
+    new Menu([ref "", ref fileOptionItems, "file", "fileOptions"]);;
+newFileOptions =
+    ["Word", "PowerPoint"];;
+newFileOptionItems = 
+    map_ ""
+        (\x => 
+            new MenuItem([ref x]))
+    newFileOptions;;
+newFileMenu = 
+    new Menu([ref "", ref newFileOptionItems, "new", "newOptions"]);;
+menuBar = new MenuBar([fileMenu :: mainOptionItems]);;
+
+main =  (newFileMenu->setTitle) "New File";
+        (fileMenu->add) newFileMenu;
+        (fileMenu->setTitle) "File (F)";
+        menuBar;;
+
+
+-- Template
+        ,
+
+        ( "MenuItem"
+        , "new MenuItem([title])"
+        , """Html.div [["border-bottom", "2px solid lightgray"]
+                    , ["width", "100px"]
+                    , ["padding", "5px 10px"]] [] [title]"""),
+        
+        ( "Menu"
+        , "new Menu([title, items, id1, id2])"
+        , """Html.div [] [] 
+            [ Html.div [] [["id", id1]] 
+                [ Html.span [] [] [title]
+                , Html.objectlist [] [["id", "List-1"]]
+                    [Html.div [] [["id", id2]] items]
+                ]
+            , Html.style [] [] 
+                ["#" ++ id1 ++ " {
+                    width: 100px;
+                    position: relative; 
+                    padding: 5px 10px;
+                    border-radius: 2.5px;
+                    display: inline-block;
+                    background-color: white;
+                    border-bottom: 2px solid lightgray
+                }
+                #" ++ id2 ++ " {
+                    width: 120px;
+                    display: none;
+                    position: absolute;
+                    border-radius: 2.5px;
+                    background-color: white;
+                    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.5);
+                }
+                #" ++ id1 ++ ":hover #" ++ id2 ++ " {
+                    display:block;
+                }"]
+            ]"""),
+
+        ( "MenuBar"
+        , "new MenuBar([menu])"
+        , """Html.div [["display", "flex"]] [] menu""")

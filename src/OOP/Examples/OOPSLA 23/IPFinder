@@ -1,0 +1,201 @@
+Class JComponent Extends Object {}
+
+Class Container Extends Object {}
+
+Class JFrame Extends Container {
+    height:String, 
+    width:String, 
+    title:Ref<String>, 
+    members:Ref<List<JComponent>>, 
+    containers:Ref<List<Container>>;
+
+    setMembers(members){
+        this.members:=members
+    };
+    setContainers(members){
+        this.containers:=members
+    };
+    setTitle(title){
+        this.title:=title ++ "..?"
+    };
+}
+
+Class JLabel Extends JComponent {
+    height:String, 
+    width:String, 
+    bgcolor:String, 
+    left:String, 
+    top: String, 
+    text:Ref<String>;
+
+    setText(text){
+        this.text:=text++"..."
+    };
+}
+
+Class AbstractButton Extends JComponent {
+    left:String, 
+    top:String, 
+    height:String, 
+    width:String;
+}
+
+Class JButton Extends AbstractButton {
+    hint:Ref<String>, 
+    id:String, 
+    onclick:String;
+
+    setHint(hint){
+        this.hint:=hint++"->"
+    };
+}
+
+Class JDialog Extends Container {
+    title:Ref<String>, 
+    hint:String, 
+    id:String;
+
+    setTitle(title){
+        this.title:=title ++ ">>>"
+    };
+}
+
+Class JTextComponent Extends JComponent {}
+
+Class JTextField Extends JTextComponent {
+    left:String, 
+    top:String, 
+    text:String;
+}
+
+urls =  [ ("www.google.com"
+        ,  "111.222.333.44")
+        , ("www.bing.com"
+        ,  "220.111.55.33")
+        , ("stackoverflow.com"
+        ,  "117.22.85.20")];;
+
+hintLabel = new JLabel(["20px", "200px"
+                        , "rgb(214, 214, 214)"
+                        , "auto"
+                        , "100px"
+                        , ref "Enter URL:"]);;
+
+url = "www.google.com";;
+
+ip = 
+    letrec find =
+        \q =>
+            \ls =>
+                case ls of
+                    [] => "Query Failed"
+                    | (f, l) :: xs =>
+                        if f == q then
+                            l
+                        else
+                            find q xs
+    in find url urls;;
+
+input = new JTextField(["auto", "10px", url]);;
+
+confirmBtn = new JButton(["100px", "10px", "20px", "100px"
+                        , ref "Find IP", "findbtn"
+                        , "document.getElementById('dialog').removeAttribute('hidden');"]);;
+
+components = hintLabel :: [input, confirmBtn];;
+
+dialog = new JDialog([ref "IP", ip, "dialog"]);;
+
+ipFinder = new JFrame(["550px", "300px"
+                    , ref "IPFinder"
+                    , ref components
+                    , ref [dialog]]);;
+
+main =
+    (dialog->setTitle) "IP";
+    (ipFinder->setTitle) "IpFinder";
+    ipFinder;;
+------------------------------------------------
+    ( "JButton"
+    , "new JButton([left, top, height, width, hint, id, onclick])"
+    , """Html.div   [ ["margin-left", left]
+                    , ["margin-right", "auto"]
+                    , ["margin-top", top]
+                    , ["margin-bottom", "auto"]
+                    , ["position", "absolute"]]
+                    []
+                    [ Html.button [["height", height], 
+                                ["width", width]] 
+                                [["id", id], 
+                                ["onclick", onclick]] 
+                                [hint]]
+                    """),
+    
+    ( "JLabel"
+    , "new JLabel([height, width, bgcolor, left, top, text])"
+    , """Html.div   [ ["height", height]
+                    , ["width", width]
+                    , ["background-color", bgcolor]
+                    , ["margin-left", left]
+                    , ["margin-right", "auto"]
+                    , ["margin-top", top]
+                    , ["margin-bottom", "auto"]
+                    , ["text-align", "left"]]
+                    []
+                    [text]"""),
+
+    ( "JDialog"
+    , "new JDialog([title, hint, id])"
+    , """Html.div   [ ["height", "150px"]
+                    , ["width", "200px"]
+                    , ["margin", "auto auto auto auto"]
+                    , ["border-style", "solid"]
+                    , ["border-width", "medium"]
+                    , ["border-color", "rgb(85, 154, 243)"]
+                    , ["position", "relative"]
+                    , ["background-color", "rgb(214, 214, 214)"]] 
+                    [ ["id", id]
+                    , ["hidden", ""]]
+                    [ Html.div  [ ["background-color", "rgb(85, 154, 243)"]
+                                , ["height", "25px"]] 
+                                [] 
+                                [title]
+                    , Html.div [] [["id", id ++ "hint"]] [hint]
+                    , Html.button [] [["id", id ++ "btn"]] ["Ok"]
+                    , Html.script [] [] 
+                        ["document.getElementById('" ++ id ++ "btn').addEventListener(
+                                'click', function(){
+                                    document.getElementById('" ++ id ++ "').setAttribute('hidden', true);
+                                }
+                        )"]]"""),
+        
+    ( "JTextField"
+    , "new JTextField([left, top, text])"
+    , """Html.div   [ ["margin-left", left]
+                    , ["margin-right", "auto"]
+                    , ["margin-top", top]
+                    , ["margin-bottom", "auto"]
+                    , ["border", "1px solid black"]
+                    , ["width", "200px"]
+                    , ["text-align", "left"]
+                    , ["background-color", "white"]]
+                    []
+                    [text]"""),
+
+    ( "JFrame"
+    , "new JFrame([height, width, title, members, containers])"
+    , """Html.div   [ ["height", height]
+                    , ["width", width]
+                    , ["margin", "auto"]
+                    , ["border-style", "solid"]
+                    , ["border-width", "medium"]
+                    , ["border-color", "rgb(85, 154, 243)"]
+                    , ["position", "relative"]
+                    , ["background-color", "rgb(214, 214, 214)"]] 
+                    [] 
+                    [ Html.div  [ ["background-color", "rgb(85, 154, 243)"]
+                                , ["height", "25px"]] 
+                                [] 
+                                [title]
+                    , Html.div [] [] members
+                    , Html.div [] [] containers]"""),

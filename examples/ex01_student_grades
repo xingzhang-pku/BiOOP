@@ -1,0 +1,11 @@
+let students =
+    [ [88.0, 89.0, 87.0]
+    , [76.0, 93.0, 95.0]
+    , [93.0, 79.0, 84.0]
+    ]
+in
+let weighted_average =
+    \[hw, midterm, final] =>
+        30.0 * hw + _
+in
+    map weighted_average students 

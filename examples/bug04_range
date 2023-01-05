@@ -1,0 +1,9 @@
+letrec range =
+    \i =>
+        \j =>
+            if i < j then
+               _ :: (range (i + 1) j)
+            else
+                []
+in
+range 0 4

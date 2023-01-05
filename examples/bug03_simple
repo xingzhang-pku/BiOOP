@@ -1,0 +1,7 @@
+let a = 1 in
+let b = a * 2 + 2 in
+let c = [1,2,3] in
+let d = map (\x => x * b) [1,2,3] in
+let f = [4,5,6] in
+    zipWith (\x=> \y=> 
+                x + y) d f

@@ -1,0 +1,106 @@
+Class Coffee Extends TextPane{
+    price: String, count: String;
+}
+
+Class DisplayArea2 Extends Objects{
+    menu: Ref<List<Coffee>>;
+    add(item){
+        this.menu:=(!this.menu)++[item]
+    };
+}
+
+Class ConfirmArea Extends DisplayArea2{
+    total: String;
+}
+Class Cafe Extends Objects{
+    slogan: String, displayArea: DisplayArea2,
+    confirmArea: ConfirmArea;
+}
+coffeeInfo = 
+    [ ["Espresso", 20, 0]
+    , ["Americano", 15, 2]
+    , ["Latte", 20, 0]
+    , ["Cappuccino", 22, 2]];;
+coffeeList =
+    map_    ["", 0, 0] 
+            (\[name, price, count] =>
+                new Coffee( [ name
+                            , toString price
+                            , toString count]))
+            coffeeInfo
+;;
+
+coffeeArea = new DisplayArea2([ref coffeeList]);;
+orderInfo = 
+    letrec generateOrder =
+        \objs =>
+            case objs of
+                  [] => []
+                | [name, price, count] :: objs_ =>
+                    if count == 0 then (generateOrder objs_)
+                    else [name, price, count] :: (generateOrder objs_)
+    in
+    generateOrder coffeeInfo;;
+total =
+    letrec cal =
+        \ls =>
+            case ls of
+                  [] => 0
+                | [name, price, count] :: ls_ =>
+                    price * count + (cal ls_)
+    in 
+        cal orderInfo;;
+orderList =
+    map_    ["", 0, 0] 
+            (\[name, price, count] =>
+                new Coffee( [ name
+                            , toString price
+                            , toString count]))
+            orderInfo
+;;
+confirmArea = new ConfirmArea([ref orderList, toString total]);;
+
+cafe = new Cafe(["A cafe", coffeeArea, confirmArea]);;
+
+main = cafe;;
+
+-- Template
+        ( "Coffee"
+        , "new Coffee([id, price, count])"
+        , """Html.div [["display", "flex"]] []  [ Html.div  [ ["width", "100px"]
+                                                            , ["border-bottom", "1px blue solid"]] [] [id]
+                                                , Html.div  [ ["width", "50px"]
+                                                            , ["border-bottom", "1px blue solid"]] [] [price]
+                                                , Html.div  [ ["width", "50px"]
+                                                            , ["border-bottom", "1px blue solid"]] [] [count]]"""),
+
+        ( "DisplayArea2"
+        , "new DisplayArea2([menu])"
+        , """Html.div   [["margin-bottom", "50px"]] [] 
+                        [ Html.div  [["display", "flex"]] []  
+                                    [ Html.div  [ ["width", "100px"]
+                                                , ["border-bottom", "1px blue solid"]] [] ["Name"]
+                                    , Html.div  [ ["width", "50px"]
+                                                , ["border-bottom", "1px blue solid"]] [] ["Price"]
+                                    , Html.div  [ ["width", "50px"]
+                                                , ["border-bottom", "1px blue solid"]] [] ["Count"]]
+                        , Html.div [] [] menu]"""),
+
+        ( "ConfirmArea"
+        , "new ConfirmArea([menu, total])"
+        , """Html.div [] [] [ Html.div [["text-align", "left"]] [] ["Please confirm your order:"]
+                            , Html.div  [["display", "flex"]] []  
+                                        [ Html.div  [ ["width", "100px"]
+                                                    , ["border-bottom", "1px blue solid"]] [] ["Name"]
+                                        , Html.div  [ ["width", "50px"]
+                                                    , ["border-bottom", "1px blue solid"]] [] ["Price"]
+                                        , Html.div  [ ["width", "50px"]
+                                                    , ["border-bottom", "1px blue solid"]] [] ["Count"]]
+                            , Html.div [] [] menu
+                            , Html.div [["text-align", "left"]] [] ["total: " ++ total]]"""),
+        
+        ( "Cafe"
+        , "new Cafe([slogan, coffeeArea, confirmArea])"
+        , """Html.div [] [] [ Html.div [] [] [slogan]
+                            , coffeeArea
+                            , confirmArea]""")

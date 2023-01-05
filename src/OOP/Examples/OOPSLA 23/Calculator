@@ -1,0 +1,371 @@
+Class JComponent Extends Object {}
+
+Class Container Extends Object {}
+
+Class JFrame Extends Container {
+    height:String, 
+    width:String, 
+    title:Ref<String>, 
+    members:Ref<List<JComponent>>, 
+    containers:Ref<List<Container>>;
+
+    setMembers(members){
+        this.members:=members
+    };
+    setContainers(members){
+        this.containers:=members
+    };
+    setTitle(title){
+        this.title:=title ++ "..?"
+    };
+}
+
+Class JLabel Extends JComponent {
+    height:String, 
+    width:String, 
+    bgcolor:String, 
+    left:String, 
+    top: String, 
+    text:Ref<String>;
+
+    setText(text){
+        this.text:=text++"..."
+    };
+}
+
+Class AbstractButton Extends JComponent {
+    left:String, 
+    top:String, 
+    height:String, 
+    width:String;
+}
+
+Class JButton Extends AbstractButton {
+    hint:Ref<String>, 
+    id:String, 
+    onclick:String;
+
+    setHint(hint){
+        this.hint:=hint++"->"
+    };
+}
+
+Class MyCalculator Extends JFrame {
+    displayLabel: DisplayLabel;
+}
+
+Class DigitBtn Extends JButton {}
+
+Class DisplayLabel Extends JLabel {
+    id:String, 
+    memval:String, 
+    op:String;
+}
+
+Class OpBtn Extends JButton {}
+
+Class SpecBtn Extends JButton {}
+
+digits = ["7", "8", "9", "4", "5", "6", "1", "2", "3", "0", "+/-", "."];;
+
+ops = ["/", "sqrt", "*", "%", "-", "1/X", "+", "="];;
+
+mems = ["MC", "MR", "MS", "M+"];;
+
+btnSize = 30;;
+btnMargin = 20;;
+
+frameWidth = "320px";;
+frameHeight = "350px";;
+
+labelWidth = "200px";;
+labelHeight = "30px";;
+
+digitBtns =
+    letrec getBtns =
+        \index =>
+            \btnHints =>
+                case btnHints of
+                    [] => []
+                    | b :: bs => 
+                        let 
+                            l = 
+                                (index - 3 * (index // 3)) * (btnSize + btnMargin) + 70
+                        in 
+                        let 
+                            t = 
+                                (index // 3) * (btnSize + btnMargin) + 70 in
+                        let 
+                            script = 
+                                "console.log('" ++ b ++ "')" 
+                        in
+                        (new DigitBtn([((toString l) ++ "px")
+                                    , ((toString t) ++ "px")
+                                    , ((toString btnSize) ++ "px")
+                                    , ((toString btnSize) ++ "px")
+                                    , ref b
+                                    , "digit" ++ (toString index)
+                                    , ""])) 
+                        :: (getBtns (index+1) bs)
+    in (getBtns 0 digits);;
+
+opsBtns =
+    letrec getBtns =
+        \index =>
+            \btnHints =>
+                case btnHints of
+                    [] => []
+                    | b :: bs => 
+                        let 
+                            l =
+                                (index - 2 * (index // 2)) * (btnSize + btnMargin) + 220
+                        in 
+                        let 
+                            t = 
+                                (index // 2) * (btnSize + btnMargin) + 70 in
+                        let 
+                            script = 
+                                "console.log('" ++ b ++ "')" 
+                        in
+                        (new OpBtn([((toString l) ++ "px")
+                                    , ((toString t) ++ "px")
+                                    , ((toString btnSize) ++ "px")
+                                    , ((toString btnSize) ++ "px")
+                                    , ref b
+                                    , "ops" ++ (toString index)
+                                    , script])) 
+                        :: (getBtns (index+1) bs)
+    in (getBtns 0 ops);;
+
+memsBtns =
+    letrec getBtns =
+        \index =>
+            \btnHints =>
+                case btnHints of
+                    [] => []
+                    | b :: bs => 
+                        let 
+                            t = 
+                                index * (btnSize + btnMargin) + 70 
+                        in
+                        let 
+                            script = 
+                                "console.log('" ++ b ++ "')" 
+                        in
+                        (new JButton([ "20px"
+                                    , ((toString t) ++ "px")
+                                    , ((toString btnSize) ++ "px")
+                                    , ((toString btnSize) ++ "px")
+                                    , ref b
+                                    , "mem" ++ (toString index)
+                                    , script])) 
+                        :: (getBtns (index+1) bs)
+    in (getBtns 0 mems);;
+
+backspcBtn = new SpecBtn([("20px")
+                        , "20px"
+                        , ((toString btnSize) ++ "px")
+                        , "80px"
+                        , ref "Backspc"
+                        , "spec0"
+                        , " "]);;
+
+cBtn = new SpecBtn([((toString (100 + btnMargin)) ++ "px")
+                        , "20px"
+                        , ((toString btnSize) ++ "px")
+                        , "80px"
+                        , ref "C"
+                        , "spec1"
+                        , " "]);;
+
+ceBtn = new SpecBtn([((toString (180 + 2 * btnMargin)) ++ "px")
+                        , "20px"
+                        , ((toString btnSize) ++ "px")
+                        , "80px"
+                        , ref "CE"
+                        , "spec2"
+                        , " "]);;
+
+
+specialBtns = [backspcBtn, cBtn, ceBtn];;
+
+label=new DisplayLabel([labelHeight
+                        , labelWidth
+                        , "rgb(62, 146, 255)"
+                        , "auto"
+                        , "10px"
+                        , ref " "
+                        , "label"
+                        , ".0"
+                        , "?"]);;
+
+btns = digitBtns ++ opsBtns ++ memsBtns ++ specialBtns;;
+
+calculator = new MyCalculator([frameHeight
+                            , frameWidth
+                            , ref "Calculator - JavaTPoint"
+                            , ref []
+                            , ref []
+                            , label]);;
+
+main =  (backspcBtn->setHint) "Backspc";
+        (cBtn->setHint) "C";
+        (calculator->setMembers) btns;
+        (calculator->setTitle) "Calculator";
+        calculator;;
+-----------------------------------------
+        ( "JButton"
+        , "new JButton([left, top, height, width, hint, id, onclick])"
+        , """Html.div   [ ["margin-left", left]
+                        , ["margin-right", "auto"]
+                        , ["margin-top", top]
+                        , ["margin-bottom", "auto"]
+                        , ["position", "absolute"]]
+                        []
+                        [ Html.button [["height", height],
+                                    ["width", width]] 
+                                    [["id", id], 
+                                    ["onclick", onclick]] 
+                                    [hint]]
+                        """),
+        
+        ( "MyCalculator"
+        , "new MyCalculator([height, width, title, members, containers, displayLabel])"
+        , """Html.div   [ ["height", height]
+                        , ["width", width]
+                        , ["margin", "auto auto auto auto"]
+                        , ["border-style", "solid"]
+                        , ["border-width", "medium"]
+                        , ["border-color", "rgb(85, 154, 243)"]
+                        , ["position", "relative"]
+                        , ["background-color", "rgb(214, 214, 214)"]] 
+                        [] 
+                        [ Html.div  [ ["background-color", "rgb(85, 154, 243)"]
+                                    , ["height", "25px"]] 
+                                    [] 
+                                    [title]
+                        , Html.div [] [] [displayLabel]
+                        , Html.div [] [] members
+                        , Html.div [] [] containers]"""),
+
+        ( "DisplayLabel"
+        , "new DisplayLabel([height, width, bgColor, left, top, text, id, memval, op])"
+        , """Html.div   [ ["height", height]
+                        , ["width", width]
+                        , ["background-color", bgColor]
+                        , ["margin-left", left]
+                        , ["margin-right", "auto"]
+                        , ["margin-top", top]
+                        , ["margin-bottom", "auto"]]
+                        [ ["id", id]
+                        , ["memval", memval]
+                        , ["op", op]]
+                        [text]"""),
+
+        ( "DigitBtn"
+        , "new DigitBtn([left, top, height, width, hint, id, onClick])"
+        , """Html.div   [ ["margin-left", left]
+                        , ["margin-right", "auto"]
+                        , ["margin-top", top]
+                        , ["margin-bottom", "auto"]
+                        , ["position", "absolute"]]
+                        []
+                        [ Html.button [["height", height],
+                                    ["width", width]] 
+                                    [["id", id]] 
+                                    [hint]
+                        , Html.script [] [] 
+                            [ "document.getElementById('" ++ id ++ "').addEventListener(
+                                'click', function(){ 
+                                    dl = document.getElementById('label');
+                                    if(dl.innerHTML == ''){
+                                        dl.innerHTML = '" ++ hint ++ "';
+                                    }else{
+                                        dl.innerHTML = dl.innerHTML + '" ++ hint ++ "';
+                                    }
+                                }
+                            )"]]"""),
+
+        ( "OpBtn"
+        , "new OpBtn([left, top, height, width, hint, id, onClick])"
+        , """Html.div   [ ["margin-left", left]
+                        , ["margin-right", "auto"]
+                        , ["margin-top", top]
+                        , ["margin-bottom", "auto"]
+                        , ["position", "absolute"]]
+                        []
+                        [ Html.button [["height", height], 
+                                    ["width", width]] 
+                                    [["id", id]] 
+                                    [hint]
+                        , Html.script [] [] 
+                            ["document.getElementById('" ++ id ++ "').addEventListener(
+                                'click', function(){
+                                    dl = document.getElementById('label');
+                                    oprand = dl.innerHTML;
+                                    op = '" ++ hint ++ "';
+                                    if(op == '1/X'){
+                                        dl.innerHTML = (1 / parseFloat(oprand));
+                                    }else if(op == 'sqrt'){
+                                        dl.innerHTML = (Math.sqrt(parseFloat(oprand)));
+                                    }else if(dl.getAttribute('memval') == '.0'){
+                                            dl.setAttribute('memval', dl.innerHTML);
+                                            dl.setAttribute('op', '" ++ hint ++ "');
+                                            dl.innerHTML = '';
+                                    }else if(op == '='){
+                                        op = dl.getAttribute('op');
+                                        if(oprand == ''){
+                                            dl.innerHTML = dl.getAttribute('memval');
+                                        }else{
+                                            oprand = parseFloat(oprand);
+                                            memval = parseFloat(dl.getAttribute('memval'));
+                                            switch(op){
+                                                case '+': res = memval + oprand;break;
+                                                case '-': res = memval - oprand;break;
+                                                case '*': res = memval * oprand;break;
+                                                case '/': res = memval / oprand;break;
+                                                case '%': res = (parseInt(dl.getAttribute('memval'))) % (parseInt(dl.innerHTML));break;
+                                                default: res = 'no such operation';
+                                            }
+                                            dl.innerHTML = res;
+                                            dl.setAttribute('memval', '.0');
+                                            dl.setAttribute('op', '?');
+                                        }
+                                    }else{
+                                        dl.innerHTML = 'invalid operation';
+                                    }
+                                }
+                            )"]]"""),
+
+        ( "SpecBtn"
+        , "new SpecBtn([left, top, height, width, hint, id, onClick])"
+        , """Html.div   [ ["margin-left", left]
+                        , ["margin-right", "auto"]
+                        , ["margin-top", top]
+                        , ["margin-bottom", "auto"]
+                        , ["position", "absolute"]]
+                        []
+                        [ Html.button [["height", height],
+                                    ["width", width]] 
+                                    [["id", id]] 
+                                    [hint]
+                        , Html.script [] [] 
+                            ["document.getElementById('" ++ id ++ "').addEventListener(
+                                'click', function(){ 
+                                    dl = document.getElementById('label');
+                                    hint = '" ++ hint ++ "';
+                                    if(hint == 'Backspc'){
+                                        str = dl.innerHTML;
+                                        str = str.substring(0, str.length - 1);
+                                        dl.innerHTML = str;
+                                    }
+                                    else if(hint == 'C'){
+                                        dl.innerHTML = '';
+                                        dl.setAttribute('memval', '.0');
+                                        dl.setAttribute('op', '?');
+                                    }
+                                    else if(hint == 'CE'){
+                                        dl.innerHTML = '';
+                                    }
+                                }
+                            )"]]""")

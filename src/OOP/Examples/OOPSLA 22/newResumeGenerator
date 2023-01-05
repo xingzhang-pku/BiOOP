@@ -1,0 +1,129 @@
+Class Input3 Extends Object {
+    hint:String, value:String;
+}
+
+Class TextField3 Extends Input3 {
+    left:String;
+}
+Class Button3 Extends Object{
+    id: String, displayId: String,
+    value: String;
+}
+Class DisplayArea3 Extends Input3{
+    id: String, btns: List<Button3>;
+}
+
+Class TextPane3 Extends Input3 {
+    id:String;
+}
+
+Class WebPage3 Extends Object {
+    components:List<Object>;
+}
+margin = "100px";;
+name = "Xing";;
+school = "PKU";;
+age = "24";;
+gender = "girl";;
+exam = "IELTS";;
+nameField = 
+        new TextField3(["Name: ", name, margin]) ;;
+ageField = 
+        new TextField3(["Age: ", age, margin]) ;;
+schoolField = 
+        new TextField3(["Graduated School: ", school, margin]);;
+radioOptions =
+    ["girl", "boy"];;
+radioBtns =
+    map_ "" (\x => new Button3([x, "gender", x])) radioOptions;;
+genderArea = new DisplayArea3(["Gender:", gender, "gender", radioBtns]);;
+examOptions =
+    ["IELTS", "TOEFL"];;
+examBtns =
+    map_ "" (\x => new Button3([x, "exam", x])) examOptions;;
+examArea = new DisplayArea3(["Exam:", exam, "exam", examBtns]);;
+generateGender g =
+    if g == "" then "unknown"
+    else "a " ++ g
+;;
+generateExam e =
+    if e == "" then "I didn't pass any exam"
+    else "I passed " ++ e
+;;
+resume =
+    "Hi, I'm " ++ name ++ ". I'm " 
+    ++ age ++ " years old. I graduated from " 
+    ++ school ++ ". I'm " ++ (generateGender gender) ++ ". " 
+    ++ generateExam exam ++ ".";;
+resumeArea =
+    new TextPane3(["Your resume has changed!", resume, "resume"]);;
+formItems = 
+        [ nameField, ageField, schoolField, genderArea, examArea, resumeArea];;
+web = 
+        new WebPage3([formItems]);;
+main = web;;
+
+-- Template
+    ( "Input3"
+    , "new Input3([hint, value])"
+    , """Html.input [] [["value", value]] []"""),
+
+    ( "TextField3"
+    , "new TextField3([hint, value, left])"
+    , """Html.div   [ ["margin-left", left]
+                    , ["text-align", "left"]
+                    , ["display", "flex"]
+                    , ["margin-top", "10px"]
+                    , ["margin-bottom", "20px"]
+                    ] 
+                [] 
+                [ hint
+                , Html.div  [ ["border", "1px solid black"]
+                            , ["width", "200px"]
+                            , ["margin-left", "10px"]
+                            ] 
+                            [] [value]
+                ]"""),
+
+    ( "Button3"
+    , "new Button3([id, displayId, value])"
+    , """Html.div [] [] [ Html.div  [ ["margin-right", "20px"]
+                                    , ["background-color", "lightgrey"]
+                                    ] 
+                                    [["id", id]] [value]
+                        , Html.script [] [] [
+                            "document.getElementById('" ++ id ++ "').addEventListener(
+                                'click', function(){
+                                    document.getElementById('"++displayId++"').innerHTML='"++value++"'
+                                });"
+                        ]]"""),
+
+    ( "DisplayArea3"
+    , "new DisplayArea3([hint, value, id, btns])"
+    , """Html.div   [ ["display", "flex"]
+                    , ["margin-bottom", "20px"]] 
+                    []  
+                    [ Html.div  [ ["width", "100px"]
+                                , ["margin-left", "100px"]] [] [hint]
+                    , Html.div [["width", "100px"]] [["id", id]] [value]
+                    , Html.div [["display", "flex"]] [] btns]"""),
+
+    ( "TextPane3"
+    , "new TextPane3([hint, value, id])"
+    , """Html.div [] [] [ Html.div [] [["id", id]] [value]
+                        , Html.div  [ ["display", "none"]
+                                    , ["border", "1px solid red"]
+                                    , ["width", "200px"]
+                                    , ["margin-left", "200px"]
+                                    , ["margin-top", "30px"]] 
+                                    [["id", "hint"]] [hint]
+                        , Html.script [] [] [
+                            "document.getElementById('" ++ id ++ "').addEventListener(
+                                'DOMSubtreeModified', function(){
+                                    document.getElementById('hint').style.display='block';
+                                });"
+                        ]]"""),
+
+    ( "WebPage3"
+    , "new WebPage3([components])"
+    , "Html.div [] [] components")

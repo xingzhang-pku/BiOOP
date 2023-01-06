@@ -128,9 +128,8 @@ questions =
                         (new MyQuestion([ q
                                         , (getOptions op)
                                         , ("q" ++ (toString i))
-                                        , (getAns op 0 ans)
-                                        , "hidden"])) 
-                        ::(getQuestions (i + 1) qs_)
+                                        , (getAns op 0 ans), "hidden"])) 
+                                        ::(getQuestions (i + 1) qs_)
     in
     getQuestions 0 data;;
 

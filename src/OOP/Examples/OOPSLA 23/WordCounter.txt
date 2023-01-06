@@ -168,11 +168,11 @@ text = new JButton(["350px", "20px", "30px", "100px", ref "text color"
 
 wordCounter = new WordCounter(["450px", "500px"
                             ,  ref "Char Word Count Tool"
-                            ,  ref []
-                            ,  ref [padColor, textColor]
-                            ,  lb1, lb2
-                            ,  ta
-                            ,  [b, pad, text]]);;
+                            , ref []
+                            , ref [padColor, textColor]
+                            , lb1, lb2
+                            , ta
+                            , [b, pad, text]]);;
 
 main = (wordCounter->setTitle) "char word count tool";
         (b->setHint) "Click";

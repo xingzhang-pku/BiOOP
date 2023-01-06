@@ -1,5 +1,7 @@
 Class JComponent Extends Object {}
 
+Class Container Extends Object {}
+
 Class JFrame Extends Container {
     height:String, 
     width:String, 
